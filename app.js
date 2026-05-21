@@ -632,8 +632,8 @@ function App() {
   const reviewPool = filtered.filter((e) => wrongBook.includes(eventKey(e)));
   const activeEvents = reviewOnly ? reviewPool : filtered;
   const accuracy = record.total > 0 ? Math.round(record.correct / record.total * 100) : 0;
-  const lastAnswerStyle = lastAnswerCorrect ? { background: "var(--color-background-success)", color: "var(--color-text-success)" } : { background: "var(--color-background-danger)", color: "var(--color-text-danger)" };
-  const lastAnswerLabel = lastAnswerCorrect ? "\u2713 \u6B63\u89E3" : "\u2717 \u4E0D\u6B63\u89E3";
+  const lastAnswerStyle = lastAnswerCorrect === true ? { background: "var(--color-background-success)", color: "var(--color-text-success)" } : { background: "var(--color-background-danger)", color: "var(--color-text-danger)" };
+  const lastAnswerLabel = lastAnswerCorrect === true ? "\u2713 \u6B63\u89E3" : "\u2717 \u4E0D\u6B63\u89E3";
   return /* @__PURE__ */ React.createElement("div", { style: { maxWidth: 640, margin: "0 auto", padding: "1rem" } }, /* @__PURE__ */ React.createElement("h1", { style: { position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0, 0, 0, 0)", whiteSpace: "nowrap", border: 0 } }, "\u4E16\u754C\u53F2\u5E74\u53F7\u5B66\u7FD2\u30B5\u30A4\u30C8"), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 500, fontSize: 18 } }, "\u4E16\u754C\u53F2\u5E74\u53F7\u5B66\u7FD2"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)" } }, "\u51FA\u984C\u6570: ", activeEvents.length, "\u4EF6", reviewOnly ? "\uFF08\u5FA9\u7FD2\uFF09" : "")), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, alignItems: "center" } }, /* @__PURE__ */ React.createElement(RecordBadge, { correct: record.correct, total: record.total }), /* @__PURE__ */ React.createElement(
     "button",
     {

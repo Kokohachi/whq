@@ -690,10 +690,10 @@ export default function App() {
   const reviewPool = filtered.filter((e) => wrongBook.includes(eventKey(e)));
   const activeEvents = reviewOnly ? reviewPool : filtered;
   const accuracy = record.total > 0 ? Math.round((record.correct / record.total) * 100) : 0;
-  const lastAnswerStyle = lastAnswerCorrect
+  const lastAnswerStyle = lastAnswerCorrect === true
     ? { background: "var(--color-background-success)", color: "var(--color-text-success)" }
     : { background: "var(--color-background-danger)", color: "var(--color-text-danger)" };
-  const lastAnswerLabel = lastAnswerCorrect ? "✓ 正解" : "✗ 不正解";
+  const lastAnswerLabel = lastAnswerCorrect === true ? "✓ 正解" : "✗ 不正解";
 
   return (
     <div style={{ maxWidth: 640, margin: "0 auto", padding: "1rem" }}>
