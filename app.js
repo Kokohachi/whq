@@ -463,13 +463,13 @@ var MultiMode = ({ events, onRecord, direction }) => {
   useEffect(() => {
     next();
   }, [next]);
-  const choose = (e) => {
+  const choose = useCallback((e) => {
     if (result) return;
     setSelected(e);
     const isCorrect = e === q;
     setResult({ correct: isCorrect });
     onRecord(isCorrect, [q]);
-  };
+  }, [q, result, onRecord]);
   useEffect(() => {
     const onKeyDown = (ev) => {
       if (result || choices.length === 0) return;
@@ -481,7 +481,7 @@ var MultiMode = ({ events, onRecord, direction }) => {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [choices, result]);
+  }, [choices, result, choose]);
   if (!q) return /* @__PURE__ */ React.createElement("div", { style: { padding: "2rem", textAlign: "center", color: "var(--color-text-secondary)" } }, "\u51FA\u984C\u306B\u306F4\u4EF6\u4EE5\u4E0A\u306E\u30A4\u30D9\u30F3\u30C8\u304C\u5FC5\u8981\u3067\u3059");
   return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-lg)", padding: "1.5rem", marginBottom: "1rem" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)", marginBottom: 8 } }, /* @__PURE__ */ React.createElement("i", { className: "ti ti-map-pin", "aria-hidden": true, style: { marginRight: 4 } }), q.region), direction === "year-to-desc" ? /* @__PURE__ */ React.createElement("div", { style: { fontSize: 20, fontWeight: 500 } }, formatYear(q.year)) : /* @__PURE__ */ React.createElement("div", { style: { fontSize: 16, lineHeight: 1.7 } }, q.desc), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)", marginTop: 8 } }, centuryLabel(q.year))), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 8 } }, choices.map((c, i) => {
     let bg = "var(--color-background-primary)";

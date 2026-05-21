@@ -484,13 +484,13 @@ const MultiMode = ({ events, onRecord, direction }) => {
 
   useEffect(() => { next(); }, [next]);
 
-  const choose = (e) => {
+  const choose = useCallback((e) => {
     if (result) return;
     setSelected(e);
     const isCorrect = e === q;
     setResult({ correct: isCorrect });
     onRecord(isCorrect, [q]);
-  };
+  }, [q, result, onRecord]);
 
   useEffect(() => {
     const onKeyDown = (ev) => {
@@ -503,7 +503,7 @@ const MultiMode = ({ events, onRecord, direction }) => {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [choices, result]);
+  }, [choices, result, choose]);
 
   if (!q) return <div style={{ padding: "2rem", textAlign: "center", color: "var(--color-text-secondary)" }}>出題には4件以上のイベントが必要です</div>;
 
