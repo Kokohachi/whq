@@ -690,6 +690,10 @@ export default function App() {
   const reviewPool = filtered.filter((e) => wrongBook.includes(eventKey(e)));
   const activeEvents = reviewOnly ? reviewPool : filtered;
   const accuracy = record.total > 0 ? Math.round((record.correct / record.total) * 100) : 0;
+  const lastAnswerStyle = lastAnswerCorrect
+    ? { background: "var(--color-background-success)", color: "var(--color-text-success)" }
+    : { background: "var(--color-background-danger)", color: "var(--color-text-danger)" };
+  const lastAnswerLabel = lastAnswerCorrect ? "✓ 正解" : "✗ 不正解";
 
   return (
     <div style={{ maxWidth: 640, margin: "0 auto", padding: "1rem" }}>
@@ -729,8 +733,8 @@ export default function App() {
       </div>
 
       {lastAnswerCorrect !== null && (
-        <div style={{ marginBottom: "0.75rem", padding: "0.75rem 1rem", borderRadius: "var(--border-radius-md)", background: lastAnswerCorrect ? "var(--color-background-success)" : "var(--color-background-danger)", color: lastAnswerCorrect ? "var(--color-text-success)" : "var(--color-text-danger)", fontWeight: 600 }}>
-          直前の結果: {lastAnswerCorrect ? "✓ 正解" : "✗ 不正解"}
+        <div style={{ marginBottom: "0.75rem", padding: "0.75rem 1rem", borderRadius: "var(--border-radius-md)", fontWeight: 600, ...lastAnswerStyle }}>
+          直前の結果: {lastAnswerLabel}
         </div>
       )}
 
