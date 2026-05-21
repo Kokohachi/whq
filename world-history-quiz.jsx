@@ -690,12 +690,15 @@ export default function App() {
   const reviewPool = filtered.filter((e) => wrongBook.includes(eventKey(e)));
   const activeEvents = reviewOnly ? reviewPool : filtered;
   const accuracy = record.total > 0 ? Math.round((record.correct / record.total) * 100) : 0;
-  const lastAnswerStyle = lastAnswerCorrect === null
-    ? { background: "var(--color-background-secondary)", color: "var(--color-text-secondary)" }
-    : lastAnswerCorrect
-      ? { background: "var(--color-background-success)", color: "var(--color-text-success)" }
-      : { background: "var(--color-background-danger)", color: "var(--color-text-danger)" };
-  const lastAnswerLabel = lastAnswerCorrect === null ? "未回答" : lastAnswerCorrect ? "✓ 正解" : "✗ 不正解";
+  let lastAnswerStyle = { background: "var(--color-background-secondary)", color: "var(--color-text-secondary)" };
+  let lastAnswerLabel = "未回答";
+  if (lastAnswerCorrect === true) {
+    lastAnswerStyle = { background: "var(--color-background-success)", color: "var(--color-text-success)" };
+    lastAnswerLabel = "✓ 正解";
+  } else if (lastAnswerCorrect === false) {
+    lastAnswerStyle = { background: "var(--color-background-danger)", color: "var(--color-text-danger)" };
+    lastAnswerLabel = "✗ 不正解";
+  }
 
   return (
     <div style={{ maxWidth: 640, margin: "0 auto", padding: "1rem" }}>
