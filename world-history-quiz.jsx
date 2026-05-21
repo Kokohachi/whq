@@ -283,6 +283,7 @@ const getCenturies = () => {
 };
 
 const eventKey = (e) => `${e.year}__${e.desc}`;
+const EMPTY_LAST_ATTEMPT = { correct: null, prompt: "", answer: "" };
 
 const filterEvents = (events, yearRange, region, keyword = "") => {
   const q = keyword.trim().toLowerCase();
@@ -434,7 +435,7 @@ const InputMode = ({ events, onRecord }) => {
     const userYear = parseInt(ans.replace("前", "-").replace("年", ""), 10);
     const isCorrect = userYear === q.year || (ans.startsWith("前") && -parseInt(ans.replace("前", "")) === q.year);
     setResult({ correct: isCorrect, year: q.year });
-    onRecord(isCorrect, [q]);
+    onRecord(isCorrect, [q], { prompt: q.desc, answer: formatYear(q.year) });
   };
 
   const handleKey = (e) => { if (e.key === "Enter") result ? next() : check(); };
@@ -489,8 +490,11 @@ const MultiMode = ({ events, onRecord, direction }) => {
     setSelected(e);
     const isCorrect = e === q;
     setResult({ correct: isCorrect });
-    onRecord(isCorrect, [q]);
-  }, [q, result, onRecord]);
+    onRecord(isCorrect, [q], {
+      prompt: direction === "year-to-desc" ? formatYear(q.year) : q.desc,
+      answer: direction === "year-to-desc" ? q.desc : formatYear(q.year),
+    });
+  }, [direction, q, result, onRecord]);
 
   useEffect(() => {
     const onKeyDown = (ev) => {
@@ -590,7 +594,10 @@ const SortMode = ({ events, onRecord, count }) => {
     const correct = [...items].sort((a, b) => a.year - b.year);
     const isCorrect = order.every((e, i) => e === correct[i]);
     setSubmitted(true);
-    onRecord(isCorrect, items);
+    onRecord(isCorrect, items, {
+      prompt: items.map(e => e.desc).join(" / "),
+      answer: correct.map(e => `${formatYear(e.year)} ${e.desc}`).join(" → "),
+    });
   };
 
   const correct = [...items].sort((a, b) => a.year - b.year);
@@ -655,8 +662,14 @@ export default function App() {
   const [streak, setStreak] = useState(() => load("wh_streak", { current: 0, best: 0 }));
   const [wrongBook, setWrongBook] = useState(() => load("wh_wrong_events", []));
   const [reviewOnly, setReviewOnly] = useState(false);
+  const [lastAttempt, setLastAttempt] = useState(EMPTY_LAST_ATTEMPT);
 
-  const handleRecord = (isCorrect, targets = []) => {
+  const handleRecord = (isCorrect, targets = [], attempt = EMPTY_LAST_ATTEMPT) => {
+    setLastAttempt({
+      correct: isCorrect,
+      prompt: attempt.prompt ?? "",
+      answer: attempt.answer ?? "",
+    });
     const next = { correct: record.correct + (isCorrect ? 1 : 0), total: record.total + 1 };
     setRecord(next);
     save("wh_record", next);
@@ -681,12 +694,22 @@ export default function App() {
     const reset = { current: 0, best: 0 };
     setStreak(reset);
     save("wh_streak", reset);
+    setLastAttempt(EMPTY_LAST_ATTEMPT);
   };
 
   const filtered = filterEvents(EVENTS, yearRange, region, keyword);
   const reviewPool = filtered.filter((e) => wrongBook.includes(eventKey(e)));
   const activeEvents = reviewOnly ? reviewPool : filtered;
   const accuracy = record.total > 0 ? Math.round((record.correct / record.total) * 100) : 0;
+  let lastAnswerStyle = { background: "var(--color-background-secondary)", color: "var(--color-text-secondary)" };
+  let lastAnswerLabel = "未回答";
+  if (lastAttempt.correct === true) {
+    lastAnswerStyle = { background: "var(--color-background-success)", color: "var(--color-text-success)" };
+    lastAnswerLabel = "✓ 正解";
+  } else if (lastAttempt.correct === false) {
+    lastAnswerStyle = { background: "var(--color-background-danger)", color: "var(--color-text-danger)" };
+    lastAnswerLabel = "✗ 不正解";
+  }
 
   return (
     <div style={{ maxWidth: 640, margin: "0 auto", padding: "1rem" }}>
@@ -723,6 +746,18 @@ export default function App() {
           <div style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>復習候補</div>
           <div style={{ fontSize: 18, fontWeight: 600 }}>{reviewPool.length}</div>
         </div>
+      </div>
+
+      <div style={{ marginBottom: "0.75rem", padding: "0.75rem 1rem", borderRadius: "var(--border-radius-md)", fontWeight: 600, ...lastAnswerStyle }}>
+        直前の結果: {lastAnswerLabel}
+        {lastAttempt.prompt && (
+          <div style={{ marginTop: 8, paddingTop: 8, borderTop: "0.5px solid var(--color-border-tertiary)" }}>
+            <div style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>問題</div>
+            <div style={{ fontSize: 14, color: "var(--color-text-primary)", lineHeight: 1.6 }}>{lastAttempt.prompt}</div>
+            <div style={{ fontSize: 12, color: "var(--color-text-secondary)", marginTop: 8 }}>正答</div>
+            <div style={{ fontSize: 14, color: "var(--color-text-primary)", lineHeight: 1.6 }}>{lastAttempt.answer}</div>
+          </div>
+        )}
       </div>
 
       <div style={{ marginBottom: "0.75rem", display: "flex", gap: 8 }}>

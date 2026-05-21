@@ -1,5 +1,5 @@
 // main.jsx
-import React2 from "react";
+import React from "react";
 import { createRoot } from "react-dom/client";
 
 // world-history-quiz.jsx
@@ -277,6 +277,7 @@ var centuryLabel = (y) => {
   return `${c}\u4E16\u7D00`;
 };
 var eventKey = (e) => `${e.year}__${e.desc}`;
+var EMPTY_LAST_ATTEMPT = { correct: null, prompt: "", answer: "" };
 var filterEvents = (events, yearRange, region, keyword = "") => {
   const q = keyword.trim().toLowerCase();
   return events.filter((e) => {
@@ -428,7 +429,7 @@ var InputMode = ({ events, onRecord }) => {
     const userYear = parseInt(ans.replace("\u524D", "-").replace("\u5E74", ""), 10);
     const isCorrect = userYear === q.year || ans.startsWith("\u524D") && -parseInt(ans.replace("\u524D", "")) === q.year;
     setResult({ correct: isCorrect, year: q.year });
-    onRecord(isCorrect, [q]);
+    onRecord(isCorrect, [q], { prompt: q.desc, answer: formatYear(q.year) });
   };
   const handleKey = (e) => {
     if (e.key === "Enter") result ? next() : check();
@@ -468,8 +469,11 @@ var MultiMode = ({ events, onRecord, direction }) => {
     setSelected(e);
     const isCorrect = e === q;
     setResult({ correct: isCorrect });
-    onRecord(isCorrect, [q]);
-  }, [q, result, onRecord]);
+    onRecord(isCorrect, [q], {
+      prompt: direction === "year-to-desc" ? formatYear(q.year) : q.desc,
+      answer: direction === "year-to-desc" ? q.desc : formatYear(q.year)
+    });
+  }, [direction, q, result, onRecord]);
   useEffect(() => {
     const onKeyDown = (ev) => {
       if (result || choices.length === 0) return;
@@ -549,7 +553,10 @@ var SortMode = ({ events, onRecord, count }) => {
     const correct2 = [...items].sort((a, b) => a.year - b.year);
     const isCorrect = order.every((e, i) => e === correct2[i]);
     setSubmitted(true);
-    onRecord(isCorrect, items);
+    onRecord(isCorrect, items, {
+      prompt: items.map((e) => e.desc).join(" / "),
+      answer: correct2.map((e) => `${formatYear(e.year)} ${e.desc}`).join(" \u2192 ")
+    });
   };
   const correct = [...items].sort((a, b) => a.year - b.year);
   const handleDragStart = (e, idx) => {
@@ -605,7 +612,13 @@ function App() {
   const [streak, setStreak] = useState(() => load("wh_streak", { current: 0, best: 0 }));
   const [wrongBook, setWrongBook] = useState(() => load("wh_wrong_events", []));
   const [reviewOnly, setReviewOnly] = useState(false);
-  const handleRecord = (isCorrect, targets = []) => {
+  const [lastAttempt, setLastAttempt] = useState(EMPTY_LAST_ATTEMPT);
+  const handleRecord = (isCorrect, targets = [], attempt = EMPTY_LAST_ATTEMPT) => {
+    setLastAttempt({
+      correct: isCorrect,
+      prompt: attempt.prompt ?? "",
+      answer: attempt.answer ?? ""
+    });
     const next = { correct: record.correct + (isCorrect ? 1 : 0), total: record.total + 1 };
     setRecord(next);
     save("wh_record", next);
@@ -624,11 +637,21 @@ function App() {
     const reset = { current: 0, best: 0 };
     setStreak(reset);
     save("wh_streak", reset);
+    setLastAttempt(EMPTY_LAST_ATTEMPT);
   };
   const filtered = filterEvents(EVENTS, yearRange, region, keyword);
   const reviewPool = filtered.filter((e) => wrongBook.includes(eventKey(e)));
   const activeEvents = reviewOnly ? reviewPool : filtered;
   const accuracy = record.total > 0 ? Math.round(record.correct / record.total * 100) : 0;
+  let lastAnswerStyle = { background: "var(--color-background-secondary)", color: "var(--color-text-secondary)" };
+  let lastAnswerLabel = "\u672A\u56DE\u7B54";
+  if (lastAttempt.correct === true) {
+    lastAnswerStyle = { background: "var(--color-background-success)", color: "var(--color-text-success)" };
+    lastAnswerLabel = "\u2713 \u6B63\u89E3";
+  } else if (lastAttempt.correct === false) {
+    lastAnswerStyle = { background: "var(--color-background-danger)", color: "var(--color-text-danger)" };
+    lastAnswerLabel = "\u2717 \u4E0D\u6B63\u89E3";
+  }
   return /* @__PURE__ */ React.createElement("div", { style: { maxWidth: 640, margin: "0 auto", padding: "1rem" } }, /* @__PURE__ */ React.createElement("h1", { style: { position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0, 0, 0, 0)", whiteSpace: "nowrap", border: 0 } }, "\u4E16\u754C\u53F2\u5E74\u53F7\u5B66\u7FD2\u30B5\u30A4\u30C8"), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" } }, /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { fontWeight: 500, fontSize: 18 } }, "\u4E16\u754C\u53F2\u5E74\u53F7\u5B66\u7FD2"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)" } }, "\u51FA\u984C\u6570: ", activeEvents.length, "\u4EF6", reviewOnly ? "\uFF08\u5FA9\u7FD2\uFF09" : "")), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", gap: 8, alignItems: "center" } }, /* @__PURE__ */ React.createElement(RecordBadge, { correct: record.correct, total: record.total }), /* @__PURE__ */ React.createElement(
     "button",
     {
@@ -638,7 +661,7 @@ function App() {
       style: { fontSize: 12, padding: "4px 8px" }
     },
     "\u30EA\u30BB\u30C3\u30C8"
-  ), /* @__PURE__ */ React.createElement("button", { onClick: () => setShowSettings((v) => !v) }, /* @__PURE__ */ React.createElement("i", { className: "ti ti-settings", "aria-hidden": true })))), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8, marginBottom: "0.75rem" } }, /* @__PURE__ */ React.createElement("div", { style: { background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-md)", padding: "0.75rem" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)" } }, "\u6B63\u89E3\u7387"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 18, fontWeight: 600 } }, accuracy, "%")), /* @__PURE__ */ React.createElement("div", { style: { background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-md)", padding: "0.75rem" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)" } }, "\u9023\u7D9A\u6B63\u89E3"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 18, fontWeight: 600 } }, streak.current)), /* @__PURE__ */ React.createElement("div", { style: { background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-md)", padding: "0.75rem" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)" } }, "\u5FA9\u7FD2\u5019\u88DC"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 18, fontWeight: 600 } }, reviewPool.length))), /* @__PURE__ */ React.createElement("div", { style: { marginBottom: "0.75rem", display: "flex", gap: 8 } }, /* @__PURE__ */ React.createElement(
+  ), /* @__PURE__ */ React.createElement("button", { onClick: () => setShowSettings((v) => !v) }, /* @__PURE__ */ React.createElement("i", { className: "ti ti-settings", "aria-hidden": true })))), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8, marginBottom: "0.75rem" } }, /* @__PURE__ */ React.createElement("div", { style: { background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-md)", padding: "0.75rem" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)" } }, "\u6B63\u89E3\u7387"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 18, fontWeight: 600 } }, accuracy, "%")), /* @__PURE__ */ React.createElement("div", { style: { background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-md)", padding: "0.75rem" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)" } }, "\u9023\u7D9A\u6B63\u89E3"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 18, fontWeight: 600 } }, streak.current)), /* @__PURE__ */ React.createElement("div", { style: { background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-md)", padding: "0.75rem" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)" } }, "\u5FA9\u7FD2\u5019\u88DC"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 18, fontWeight: 600 } }, reviewPool.length))), /* @__PURE__ */ React.createElement("div", { style: { marginBottom: "0.75rem", padding: "0.75rem 1rem", borderRadius: "var(--border-radius-md)", fontWeight: 600, ...lastAnswerStyle } }, "\u76F4\u524D\u306E\u7D50\u679C: ", lastAnswerLabel, lastAttempt.prompt && /* @__PURE__ */ React.createElement("div", { style: { marginTop: 8, paddingTop: 8, borderTop: "0.5px solid var(--color-border-tertiary)" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)" } }, "\u554F\u984C"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 14, color: "var(--color-text-primary)", lineHeight: 1.6 } }, lastAttempt.prompt), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)", marginTop: 8 } }, "\u6B63\u7B54"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 14, color: "var(--color-text-primary)", lineHeight: 1.6 } }, lastAttempt.answer))), /* @__PURE__ */ React.createElement("div", { style: { marginBottom: "0.75rem", display: "flex", gap: 8 } }, /* @__PURE__ */ React.createElement(
     "button",
     {
       onClick: () => setReviewOnly((v) => !v),
@@ -704,5 +727,5 @@ function App() {
 
 // main.jsx
 createRoot(document.getElementById("root")).render(
-  /* @__PURE__ */ React2.createElement(React2.StrictMode, null, /* @__PURE__ */ React2.createElement(App, null))
+  /* @__PURE__ */ React.createElement(React.StrictMode, null, /* @__PURE__ */ React.createElement(App, null))
 );
