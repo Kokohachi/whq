@@ -690,7 +690,9 @@ export default function App() {
 
   return (
     <div style={{ maxWidth: 640, margin: "0 auto", padding: "1rem" }}>
-      <h1 style={{ position: "absolute", left: -10000, width: 1, height: 1, overflow: "hidden" }}>世界史年号学習サイト</h1>
+      <h1 style={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0, 0, 0, 0)", whiteSpace: "nowrap", border: 0 }}>
+        世界史年号学習サイト
+      </h1>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
           <div>
             <div style={{ fontWeight: 500, fontSize: 18 }}>世界史年号学習</div>
