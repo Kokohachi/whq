@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>世界史年号学習</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.24.0/dist/tabler-icons.min.css" />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --color-background-primary: #ffffff;
+        --color-background-secondary: #f4f6f8;
+        --color-background-info: #e8f1ff;
+        --color-background-success: #e8f8f1;
+        --color-background-warning: #fff6e8;
+        --color-background-danger: #ffecec;
+
+        --color-text-primary: #1a1d22;
+        --color-text-secondary: #5a6370;
+        --color-text-tertiary: #7d8794;
+        --color-text-info: #2459d1;
+        --color-text-success: #1d9e75;
+        --color-text-warning: #a66900;
+        --color-text-danger: #d03434;
+
+        --color-border-tertiary: #d8dde4;
+        --color-border-info: #99b7ff;
+        --color-border-success: #8fdec2;
+        --color-border-warning: #ffd08a;
+        --color-border-danger: #ffb3b3;
+
+        --border-radius-md: 10px;
+        --border-radius-lg: 14px;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --color-background-primary: #15171b;
+          --color-background-secondary: #1e2229;
+          --color-background-info: #1f2f50;
+          --color-background-success: #1a3d32;
+          --color-background-warning: #473717;
+          --color-background-danger: #4a2424;
+
+          --color-text-primary: #f4f6fb;
+          --color-text-secondary: #b1bbc7;
+          --color-text-tertiary: #93a0af;
+          --color-text-info: #9dbbff;
+          --color-text-success: #7be3bc;
+          --color-text-warning: #ffd071;
+          --color-text-danger: #ff8c8c;
+
+          --color-border-tertiary: #323843;
+          --color-border-info: #4d6db8;
+          --color-border-success: #2f705c;
+          --color-border-warning: #8c6b2e;
+          --color-border-danger: #8f4444;
+        }
+      }
+
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans JP", sans-serif;
+        background: linear-gradient(180deg, var(--color-background-secondary), var(--color-background-primary));
+        color: var(--color-text-primary);
+      }
+      button, input {
+        font: inherit;
+        border: 0.5px solid var(--color-border-tertiary);
+        border-radius: var(--border-radius-md);
+        background: var(--color-background-primary);
+        color: var(--color-text-primary);
+        padding: 0.55rem 0.8rem;
+      }
+      button { cursor: pointer; }
+      button:hover { filter: brightness(0.98); }
+      #root { min-height: 100dvh; padding: 1.5rem 0.75rem; }
+    </style>
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@18.3.1",
+          "react-dom/client": "https://esm.sh/react-dom@18.3.1/client"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

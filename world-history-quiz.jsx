@@ -282,11 +282,15 @@ const getCenturies = () => {
   return ["全時代", ...Array.from(s)];
 };
 
-const filterEvents = (events, yearRange, region) => {
+const eventKey = (e) => `${e.year}__${e.desc}`;
+
+const filterEvents = (events, yearRange, region, keyword = "") => {
+  const q = keyword.trim().toLowerCase();
   return events.filter(e => {
     const inRange = e.year >= yearRange[0] && e.year <= yearRange[1];
     const inRegion = region === "全地域" || e.region === region;
-    return inRange && inRegion;
+    const inKeyword = q === "" || e.desc.toLowerCase().includes(q) || e.region.toLowerCase().includes(q) || String(e.year).includes(q);
+    return inRange && inRegion && inKeyword;
   });
 };
 
@@ -336,7 +340,7 @@ const YearRangeSlider = ({ min, max, value, onChange }) => {
   );
 };
 
-const Settings = ({ yearRange, setYearRange, region, setRegion, onClose }) => (
+const Settings = ({ yearRange, setYearRange, region, setRegion, keyword, setKeyword, onClose }) => (
   <div style={{ background: "var(--color-background-primary)", border: "0.5px solid var(--color-border-tertiary)", borderRadius: "var(--border-radius-lg)", padding: "1.25rem", marginBottom: "1rem" }}>
     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
       <span style={{ fontWeight: 500, fontSize: 15 }}>出題範囲の設定</span>
@@ -356,6 +360,16 @@ const Settings = ({ yearRange, setYearRange, region, setRegion, onClose }) => (
           </button>
         ))}
       </div>
+    </div>
+    <div style={{ marginTop: "1rem" }}>
+      <div style={{ fontSize: 13, color: "var(--color-text-secondary)", marginBottom: 6 }}>キーワード検索</div>
+      <input
+        type="text"
+        value={keyword}
+        onChange={(e) => setKeyword(e.target.value)}
+        placeholder="例: ローマ / 前221 / 革命"
+        style={{ width: "100%", fontSize: 14 }}
+      />
     </div>
   </div>
 );
@@ -399,7 +413,7 @@ const ModeSelector = ({ mode, setMode }) => {
   );
 };
 
-const InputMode = ({ events, record, onRecord }) => {
+const InputMode = ({ events, onRecord }) => {
   const [q, setQ] = useState(null);
   const [ans, setAns] = useState("");
   const [result, setResult] = useState(null);
@@ -420,7 +434,7 @@ const InputMode = ({ events, record, onRecord }) => {
     const userYear = parseInt(ans.replace("前", "-").replace("年", ""), 10);
     const isCorrect = userYear === q.year || (ans.startsWith("前") && -parseInt(ans.replace("前", "")) === q.year);
     setResult({ correct: isCorrect, year: q.year });
-    onRecord(isCorrect);
+    onRecord(isCorrect, [q]);
   };
 
   const handleKey = (e) => { if (e.key === "Enter") result ? next() : check(); };
@@ -453,7 +467,7 @@ const InputMode = ({ events, record, onRecord }) => {
   );
 };
 
-const MultiMode = ({ events, record, onRecord, direction }) => {
+const MultiMode = ({ events, onRecord, direction }) => {
   const [q, setQ] = useState(null);
   const [choices, setChoices] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -475,8 +489,21 @@ const MultiMode = ({ events, record, onRecord, direction }) => {
     setSelected(e);
     const isCorrect = e === q;
     setResult({ correct: isCorrect });
-    onRecord(isCorrect);
+    onRecord(isCorrect, [q]);
   };
+
+  useEffect(() => {
+    const onKeyDown = (ev) => {
+      if (result || choices.length === 0) return;
+      const idx = Number(ev.key) - 1;
+      if (!Number.isNaN(idx) && idx >= 0 && idx < choices.length) {
+        ev.preventDefault();
+        choose(choices[idx]);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [choices, result]);
 
   if (!q) return <div style={{ padding: "2rem", textAlign: "center", color: "var(--color-text-secondary)" }}>出題には4件以上のイベントが必要です</div>;
 
@@ -521,7 +548,7 @@ const MultiMode = ({ events, record, onRecord, direction }) => {
   );
 };
 
-const SortMode = ({ events, record, onRecord, count }) => {
+const SortMode = ({ events, onRecord, count }) => {
   const [items, setItems] = useState([]);
   const [order, setOrder] = useState([]);
   const [submitted, setSubmitted] = useState(false);
@@ -536,7 +563,7 @@ const SortMode = ({ events, record, onRecord, count }) => {
       const anchor = shuffled[i];
       const nearby = events.filter(e => {
         const diff = Math.abs(e.year - anchor.year) / 100;
-        return diff <= MAX_SPAN_CENTURIES * 100 && e !== anchor;
+        return diff <= MAX_SPAN_CENTURIES && e !== anchor;
       });
       if (nearby.length >= count - 1) {
         const pool = [anchor, ...nearby.sort(() => Math.random() - 0.5).slice(0, count - 1)];
@@ -563,7 +590,7 @@ const SortMode = ({ events, record, onRecord, count }) => {
     const correct = [...items].sort((a, b) => a.year - b.year);
     const isCorrect = order.every((e, i) => e === correct[i]);
     setSubmitted(true);
-    onRecord(isCorrect);
+    onRecord(isCorrect, items);
   };
 
   const correct = [...items].sort((a, b) => a.year - b.year);
@@ -621,33 +648,57 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false);
   const [yearRange, setYearRange] = useState([-3000, 2010]);
   const [region, setRegion] = useState("全地域");
+  const [keyword, setKeyword] = useState("");
   const [multiDir, setMultiDir] = useState("desc-to-year");
   const [sortCount, setSortCount] = useState(5);
   const [record, setRecord] = useState(() => load("wh_record", { correct: 0, total: 0 }));
+  const [streak, setStreak] = useState(() => load("wh_streak", { current: 0, best: 0 }));
+  const [wrongBook, setWrongBook] = useState(() => load("wh_wrong_events", []));
+  const [reviewOnly, setReviewOnly] = useState(false);
 
-  const handleRecord = (isCorrect) => {
+  const handleRecord = (isCorrect, targets = []) => {
     const next = { correct: record.correct + (isCorrect ? 1 : 0), total: record.total + 1 };
     setRecord(next);
     save("wh_record", next);
+    const nextStreak = isCorrect
+      ? { current: streak.current + 1, best: Math.max(streak.best, streak.current + 1) }
+      : { current: 0, best: streak.best };
+    setStreak(nextStreak);
+    save("wh_streak", nextStreak);
+
+    const ids = targets.map(eventKey);
+    const nextWrong = isCorrect
+      ? wrongBook.filter((id) => !ids.includes(id))
+      : Array.from(new Set([...wrongBook, ...ids]));
+    setWrongBook(nextWrong);
+    save("wh_wrong_events", nextWrong);
   };
 
   const resetRecord = () => {
     const next = { correct: 0, total: 0 };
     setRecord(next);
     save("wh_record", next);
+    const reset = { current: 0, best: 0 };
+    setStreak(reset);
+    save("wh_streak", reset);
   };
 
-  const filtered = filterEvents(EVENTS, yearRange, region);
+  const filtered = filterEvents(EVENTS, yearRange, region, keyword);
+  const reviewPool = filtered.filter((e) => wrongBook.includes(eventKey(e)));
+  const activeEvents = reviewOnly ? reviewPool : filtered;
+  const accuracy = record.total > 0 ? Math.round((record.correct / record.total) * 100) : 0;
 
   return (
     <div style={{ maxWidth: 640, margin: "0 auto", padding: "1rem" }}>
       <h2 style={{ sr: "only" }}>世界史年号学習サイト</h2>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1rem" }}>
-        <div>
-          <div style={{ fontWeight: 500, fontSize: 18 }}>世界史年号学習</div>
-          <div style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>出題数: {filtered.length}件</div>
-        </div>
-        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <div>
+            <div style={{ fontWeight: 500, fontSize: 18 }}>世界史年号学習</div>
+            <div style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>
+              出題数: {activeEvents.length}件{reviewOnly ? "（復習）" : ""}
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
           <RecordBadge correct={record.correct} total={record.total} />
           <button onClick={() => { if (window.confirm("学習記録をリセットしますか？")) resetRecord(); }}
             style={{ fontSize: 12, padding: "4px 8px" }}>リセット</button>
@@ -657,8 +708,54 @@ export default function App() {
         </div>
       </div>
 
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8, marginBottom: "0.75rem" }}>
+        <div style={{ background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-md)", padding: "0.75rem" }}>
+          <div style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>正解率</div>
+          <div style={{ fontSize: 18, fontWeight: 600 }}>{accuracy}%</div>
+        </div>
+        <div style={{ background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-md)", padding: "0.75rem" }}>
+          <div style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>連続正解</div>
+          <div style={{ fontSize: 18, fontWeight: 600 }}>{streak.current}</div>
+        </div>
+        <div style={{ background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-md)", padding: "0.75rem" }}>
+          <div style={{ fontSize: 12, color: "var(--color-text-secondary)" }}>復習候補</div>
+          <div style={{ fontSize: 18, fontWeight: 600 }}>{reviewPool.length}</div>
+        </div>
+      </div>
+
+      <div style={{ marginBottom: "0.75rem", display: "flex", gap: 8 }}>
+        <button
+          onClick={() => setReviewOnly(v => !v)}
+          style={{
+            flex: 1,
+            fontSize: 13,
+            padding: "8px 0",
+            background: reviewOnly ? "var(--color-background-warning)" : "var(--color-background-primary)",
+            color: reviewOnly ? "var(--color-text-warning)" : "var(--color-text-primary)",
+            border: reviewOnly ? "1px solid var(--color-border-warning)" : "0.5px solid var(--color-border-tertiary)",
+            borderRadius: "var(--border-radius-md)"
+          }}
+        >
+          {reviewOnly ? "復習モードON" : "復習モードOFF"}
+        </button>
+        <button
+          onClick={() => { setReviewOnly(false); setKeyword(""); setRegion("全地域"); setYearRange([-3000, 2010]); }}
+          style={{ fontSize: 13, padding: "8px 12px" }}
+        >
+          フィルター解除
+        </button>
+      </div>
+
       {showSettings && (
-        <Settings yearRange={yearRange} setYearRange={setYearRange} region={region} setRegion={setRegion} onClose={() => setShowSettings(false)} />
+        <Settings
+          yearRange={yearRange}
+          setYearRange={setYearRange}
+          region={region}
+          setRegion={setRegion}
+          keyword={keyword}
+          setKeyword={setKeyword}
+          onClose={() => setShowSettings(false)}
+        />
       )}
 
       <ModeSelector mode={mode} setMode={setMode} />
@@ -689,9 +786,9 @@ export default function App() {
       )}
 
       <div style={{ background: "var(--color-background-primary)", border: "0.5px solid var(--color-border-tertiary)", borderRadius: "var(--border-radius-lg)", padding: "1.25rem" }}>
-        {mode === "input" && <InputMode events={filtered} record={record} onRecord={handleRecord} />}
-        {mode === "multi" && <MultiMode key={multiDir} events={filtered} record={record} onRecord={handleRecord} direction={multiDir} />}
-        {mode === "sort" && <SortMode events={filtered} record={record} onRecord={handleRecord} count={sortCount} />}
+        {mode === "input" && <InputMode events={activeEvents} onRecord={handleRecord} />}
+        {mode === "multi" && <MultiMode key={multiDir} events={activeEvents} onRecord={handleRecord} direction={multiDir} />}
+        {mode === "sort" && <SortMode events={activeEvents} onRecord={handleRecord} count={sortCount} />}
       </div>
     </div>
   );
