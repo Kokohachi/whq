@@ -557,6 +557,7 @@ const SortMode = ({ events, onRecord, count }) => {
   const [order, setOrder] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [dragging, setDragging] = useState(null);
+  const touchDragging = useRef(null);
 
   const generate = useCallback(() => {
     if (events.length < count) return;
@@ -605,6 +606,22 @@ const SortMode = ({ events, onRecord, count }) => {
   const handleDragStart = (e, idx) => { setDragging(idx); e.dataTransfer.effectAllowed = "move"; };
   const handleDragOver = (e, idx) => { e.preventDefault(); if (dragging !== null && dragging !== idx) move(dragging, idx); setDragging(idx); };
   const handleDrop = () => setDragging(null);
+  const handleTouchStart = (idx) => { touchDragging.current = idx; setDragging(idx); };
+  const handleTouchMove = (e) => {
+    const from = touchDragging.current;
+    if (from === null) return;
+    const touch = e.touches[0];
+    if (!touch) return;
+    const target = document.elementFromPoint(touch.clientX, touch.clientY)?.closest("[data-sort-idx]");
+    if (!target) return;
+    const to = Number(target.getAttribute("data-sort-idx"));
+    if (Number.isNaN(to) || to === from) return;
+    move(from, to);
+    touchDragging.current = to;
+    setDragging(to);
+    e.preventDefault();
+  };
+  const handleTouchEnd = () => { touchDragging.current = null; setDragging(null); };
 
   if (events.length < count) return <div style={{ padding: "2rem", textAlign: "center", color: "var(--color-text-secondary)" }}>並べ替えには{count}件以上のイベントが必要です</div>;
 
@@ -624,10 +641,15 @@ const SortMode = ({ events, onRecord, count }) => {
           }
           return (
             <div key={e.desc} draggable={!submitted}
+              data-sort-idx={i}
               onDragStart={ev => handleDragStart(ev, i)}
               onDragOver={ev => handleDragOver(ev, i)}
               onDrop={handleDrop}
-              style={{ padding: "0.75rem 1rem", borderRadius: "var(--border-radius-md)", background: bg, border: "0.5px solid var(--color-border-tertiary)", borderLeft, cursor: submitted ? "default" : "grab", display: "flex", alignItems: "center", gap: 8 }}>
+              onTouchStart={() => handleTouchStart(i)}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              onTouchCancel={handleTouchEnd}
+              style={{ padding: "0.75rem 1rem", borderRadius: "var(--border-radius-md)", background: bg, border: "0.5px solid var(--color-border-tertiary)", borderLeft, cursor: submitted ? "default" : "grab", display: "flex", alignItems: "center", gap: 8, touchAction: submitted ? "auto" : "none", userSelect: "none", WebkitUserSelect: "none" }}>
               {!submitted && <i className="ti ti-grip-vertical" aria-hidden style={{ color: "var(--color-text-tertiary)", fontSize: 16 }} />}
               <div style={{ flex: 1, fontSize: 14, lineHeight: 1.6 }}>{e.desc}</div>
               {submitted && <div style={{ fontSize: 12, fontWeight: 500, whiteSpace: "nowrap" }}>{formatYear(e.year)}</div>}
