@@ -518,6 +518,7 @@ var SortMode = ({ events, onRecord, count }) => {
   const [order, setOrder] = useState([]);
   const [submitted, setSubmitted] = useState(false);
   const [dragging, setDragging] = useState(null);
+  const touchDragging = useRef(null);
   const generate = useCallback(() => {
     if (events.length < count) return;
     const MAX_SPAN_CENTURIES = 5;
@@ -569,6 +570,28 @@ var SortMode = ({ events, onRecord, count }) => {
     setDragging(idx);
   };
   const handleDrop = () => setDragging(null);
+  const handleTouchStart = (idx) => {
+    touchDragging.current = idx;
+    setDragging(idx);
+  };
+  const handleTouchMove = (e) => {
+    const from = touchDragging.current;
+    if (from === null) return;
+    const touch = e.touches[0];
+    if (!touch) return;
+    const target = document.elementFromPoint(touch.clientX, touch.clientY)?.closest("[data-sort-idx]");
+    if (!target) return;
+    const to = Number(target.getAttribute("data-sort-idx"));
+    if (Number.isNaN(to) || to === from) return;
+    move(from, to);
+    touchDragging.current = to;
+    setDragging(to);
+    e.preventDefault();
+  };
+  const handleTouchEnd = () => {
+    touchDragging.current = null;
+    setDragging(null);
+  };
   if (events.length < count) return /* @__PURE__ */ React.createElement("div", { style: { padding: "2rem", textAlign: "center", color: "var(--color-text-secondary)" } }, "\u4E26\u3079\u66FF\u3048\u306B\u306F", count, "\u4EF6\u4EE5\u4E0A\u306E\u30A4\u30D9\u30F3\u30C8\u304C\u5FC5\u8981\u3067\u3059");
   return /* @__PURE__ */ React.createElement("div", null, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 13, color: "var(--color-text-secondary)", marginBottom: "0.75rem" } }, /* @__PURE__ */ React.createElement("i", { className: "ti ti-arrows-sort", "aria-hidden": true, style: { marginRight: 4 } }), "\u30C9\u30E9\u30C3\u30B0\u3057\u3066\u53E4\u3044\u9806\uFF08\u4E0A\uFF09\u304B\u3089\u65B0\u3057\u3044\u9806\uFF08\u4E0B\uFF09\u306B\u4E26\u3079\u66FF\u3048\u3066\u304F\u3060\u3055\u3044"), /* @__PURE__ */ React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 6, marginBottom: "1rem" } }, order.map((e, i) => {
     let borderLeft = "3px solid var(--color-border-tertiary)";
@@ -588,10 +611,15 @@ var SortMode = ({ events, onRecord, count }) => {
       {
         key: e.desc,
         draggable: !submitted,
+        "data-sort-idx": i,
         onDragStart: (ev) => handleDragStart(ev, i),
         onDragOver: (ev) => handleDragOver(ev, i),
         onDrop: handleDrop,
-        style: { padding: "0.75rem 1rem", borderRadius: "var(--border-radius-md)", background: bg, border: "0.5px solid var(--color-border-tertiary)", borderLeft, cursor: submitted ? "default" : "grab", display: "flex", alignItems: "center", gap: 8 }
+        onTouchStart: () => handleTouchStart(i),
+        onTouchMove: handleTouchMove,
+        onTouchEnd: handleTouchEnd,
+        onTouchCancel: handleTouchEnd,
+        style: { padding: "0.75rem 1rem", borderRadius: "var(--border-radius-md)", background: bg, border: "0.5px solid var(--color-border-tertiary)", borderLeft, cursor: submitted ? "default" : "grab", display: "flex", alignItems: "center", gap: 8, touchAction: submitted ? "auto" : "none", userSelect: "none", WebkitUserSelect: "none" }
       },
       !submitted && /* @__PURE__ */ React.createElement("i", { className: "ti ti-grip-vertical", "aria-hidden": true, style: { color: "var(--color-text-tertiary)", fontSize: 16 } }),
       /* @__PURE__ */ React.createElement("div", { style: { flex: 1, fontSize: 14, lineHeight: 1.6 } }, e.desc),
