@@ -605,7 +605,9 @@ function App() {
   const [streak, setStreak] = useState(() => load("wh_streak", { current: 0, best: 0 }));
   const [wrongBook, setWrongBook] = useState(() => load("wh_wrong_events", []));
   const [reviewOnly, setReviewOnly] = useState(false);
+  const [lastAnswerCorrect, setLastAnswerCorrect] = useState(null);
   const handleRecord = (isCorrect, targets = []) => {
+    setLastAnswerCorrect(isCorrect);
     const next = { correct: record.correct + (isCorrect ? 1 : 0), total: record.total + 1 };
     setRecord(next);
     save("wh_record", next);
@@ -624,6 +626,7 @@ function App() {
     const reset = { current: 0, best: 0 };
     setStreak(reset);
     save("wh_streak", reset);
+    setLastAnswerCorrect(null);
   };
   const filtered = filterEvents(EVENTS, yearRange, region, keyword);
   const reviewPool = filtered.filter((e) => wrongBook.includes(eventKey(e)));
@@ -638,7 +641,7 @@ function App() {
       style: { fontSize: 12, padding: "4px 8px" }
     },
     "\u30EA\u30BB\u30C3\u30C8"
-  ), /* @__PURE__ */ React.createElement("button", { onClick: () => setShowSettings((v) => !v) }, /* @__PURE__ */ React.createElement("i", { className: "ti ti-settings", "aria-hidden": true })))), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8, marginBottom: "0.75rem" } }, /* @__PURE__ */ React.createElement("div", { style: { background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-md)", padding: "0.75rem" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)" } }, "\u6B63\u89E3\u7387"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 18, fontWeight: 600 } }, accuracy, "%")), /* @__PURE__ */ React.createElement("div", { style: { background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-md)", padding: "0.75rem" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)" } }, "\u9023\u7D9A\u6B63\u89E3"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 18, fontWeight: 600 } }, streak.current)), /* @__PURE__ */ React.createElement("div", { style: { background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-md)", padding: "0.75rem" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)" } }, "\u5FA9\u7FD2\u5019\u88DC"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 18, fontWeight: 600 } }, reviewPool.length))), /* @__PURE__ */ React.createElement("div", { style: { marginBottom: "0.75rem", display: "flex", gap: 8 } }, /* @__PURE__ */ React.createElement(
+  ), /* @__PURE__ */ React.createElement("button", { onClick: () => setShowSettings((v) => !v) }, /* @__PURE__ */ React.createElement("i", { className: "ti ti-settings", "aria-hidden": true })))), /* @__PURE__ */ React.createElement("div", { style: { display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8, marginBottom: "0.75rem" } }, /* @__PURE__ */ React.createElement("div", { style: { background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-md)", padding: "0.75rem" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)" } }, "\u6B63\u89E3\u7387"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 18, fontWeight: 600 } }, accuracy, "%")), /* @__PURE__ */ React.createElement("div", { style: { background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-md)", padding: "0.75rem" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)" } }, "\u9023\u7D9A\u6B63\u89E3"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 18, fontWeight: 600 } }, streak.current)), /* @__PURE__ */ React.createElement("div", { style: { background: "var(--color-background-secondary)", borderRadius: "var(--border-radius-md)", padding: "0.75rem" } }, /* @__PURE__ */ React.createElement("div", { style: { fontSize: 12, color: "var(--color-text-secondary)" } }, "\u5FA9\u7FD2\u5019\u88DC"), /* @__PURE__ */ React.createElement("div", { style: { fontSize: 18, fontWeight: 600 } }, reviewPool.length))), lastAnswerCorrect !== null && /* @__PURE__ */ React.createElement("div", { style: { marginBottom: "0.75rem", padding: "0.75rem 1rem", borderRadius: "var(--border-radius-md)", background: lastAnswerCorrect ? "var(--color-background-success)" : "var(--color-background-danger)", color: lastAnswerCorrect ? "var(--color-text-success)" : "var(--color-text-danger)", fontWeight: 600 } }, "\u76F4\u524D\u306E\u7D50\u679C: ", lastAnswerCorrect ? "\u2713 \u6B63\u89E3" : "\u2717 \u4E0D\u6B63\u89E3"), /* @__PURE__ */ React.createElement("div", { style: { marginBottom: "0.75rem", display: "flex", gap: 8 } }, /* @__PURE__ */ React.createElement(
     "button",
     {
       onClick: () => setReviewOnly((v) => !v),

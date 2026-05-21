@@ -655,8 +655,10 @@ export default function App() {
   const [streak, setStreak] = useState(() => load("wh_streak", { current: 0, best: 0 }));
   const [wrongBook, setWrongBook] = useState(() => load("wh_wrong_events", []));
   const [reviewOnly, setReviewOnly] = useState(false);
+  const [lastAnswerCorrect, setLastAnswerCorrect] = useState(null);
 
   const handleRecord = (isCorrect, targets = []) => {
+    setLastAnswerCorrect(isCorrect);
     const next = { correct: record.correct + (isCorrect ? 1 : 0), total: record.total + 1 };
     setRecord(next);
     save("wh_record", next);
@@ -681,6 +683,7 @@ export default function App() {
     const reset = { current: 0, best: 0 };
     setStreak(reset);
     save("wh_streak", reset);
+    setLastAnswerCorrect(null);
   };
 
   const filtered = filterEvents(EVENTS, yearRange, region, keyword);
@@ -724,6 +727,12 @@ export default function App() {
           <div style={{ fontSize: 18, fontWeight: 600 }}>{reviewPool.length}</div>
         </div>
       </div>
+
+      {lastAnswerCorrect !== null && (
+        <div style={{ marginBottom: "0.75rem", padding: "0.75rem 1rem", borderRadius: "var(--border-radius-md)", background: lastAnswerCorrect ? "var(--color-background-success)" : "var(--color-background-danger)", color: lastAnswerCorrect ? "var(--color-text-success)" : "var(--color-text-danger)", fontWeight: 600 }}>
+          直前の結果: {lastAnswerCorrect ? "✓ 正解" : "✗ 不正解"}
+        </div>
+      )}
 
       <div style={{ marginBottom: "0.75rem", display: "flex", gap: 8 }}>
         <button
