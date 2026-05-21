@@ -734,11 +734,9 @@ export default function App() {
         </div>
       </div>
 
-      {lastAnswerCorrect !== null && (
-        <div style={{ marginBottom: "0.75rem", padding: "0.75rem 1rem", borderRadius: "var(--border-radius-md)", fontWeight: 600, ...lastAnswerStyle }}>
-          直前の結果: {lastAnswerLabel}
-        </div>
-      )}
+      <div style={{ marginBottom: "0.75rem", padding: "0.75rem 1rem", borderRadius: "var(--border-radius-md)", fontWeight: 600, ...lastAnswerStyle }}>
+        直前の結果: {lastAnswerLabel}
+      </div>
 
       <div style={{ marginBottom: "0.75rem", display: "flex", gap: 8 }}>
         <button
