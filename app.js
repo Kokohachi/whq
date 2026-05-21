@@ -1,5 +1,5 @@
 // main.jsx
-import React2 from "react";
+import React from "react";
 import { createRoot } from "react-dom/client";
 
 // world-history-quiz.jsx
@@ -704,5 +704,5 @@ function App() {
 
 // main.jsx
 createRoot(document.getElementById("root")).render(
-  /* @__PURE__ */ React2.createElement(React2.StrictMode, null, /* @__PURE__ */ React2.createElement(App, null))
+  /* @__PURE__ */ React.createElement(React.StrictMode, null, /* @__PURE__ */ React.createElement(App, null))
 );
