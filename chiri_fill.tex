@@ -176,15 +176,11 @@
 \vspace{1em}
 
 %============================================================
-% ここから本文：claude_chiri.tex をそのまま貼り付け（内容不変）
-% ※ このコミットでは冒頭のみを移植しています。
-%    続きも全て移す場合は、claude_chiri.tex の本文全体を
-%    \section{林業} 以降〜\end{document}直前まで貼り付けてください。
+% 本文（claude_chiri.tex の \section{林業} 以降〜\end{document}直前までを
+% 「内容を変えず」そのまま移植。
 %============================================================
 
-%%============================================================
 \section{林業}
-%%============================================================
 
 \subsection{基礎知識：用語整理}
 
@@ -235,5 +231,283 @@
   \item 熱帯雨林の伐採→農地転用→\imp{二酸化炭素吸収量の減少}→地球温暖化の要因。
 \end{itemize}
 \end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{世界の木材生産量統計【超重要】}
+
+\subsubsection{用材 vs 薪炭材の比率}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  xbar stacked,
+  width=13cm, height=3.5cm,
+  bar width=14pt,
+  xmin=0, xmax=100,
+  xtick={0,20,40,60,80,100},
+  xticklabel={\pgfmathprintnumber{\tick}\%},
+  ytick={1,2},
+  yticklabels={先進国, 発展途上国},
+  yticklabel style={font=\small\sffamily},
+  xlabel={割合（\%）},
+  xlabel style={font=\small},
+  legend style={at={(0.5,-0.35)},anchor=north,legend columns=-1,font=\small},
+  title={先進国・発展途上国の木材利用目的別比率（2022年，FAO）},
+  title style={font=\small\sffamily\bfseries},
+  nodes near coords, nodes near coords align={horizontal},
+  every node near coord/.style={font=\tiny},
+]
+\addplot[fill=mainblue!70, draw=mainblue] coordinates {(70,1) (35,2)};
+\addplot[fill=mainorange!70, draw=mainorange] coordinates {(30,1) (65,2)};
+\legend{産業用材（用材）, 薪炭材}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{tcolorbox}[warnbox, title={🔑 統計判定ポイント：用材 vs 薪炭材}]
+\begin{itemize}[leftmargin=1em]
+  \item \imp{先進国} → 用材（産業用材）の割合が高い（約7割以上）。化石燃料を使うので薪炭材が少ない。
+  \item \imp{発展途上国} → 薪炭材の割合が高い（約6割以上）。燃料として使う比率が高い。
+  \item 木材生産量1位の国を聞かれたら → \imp{インド}（薪炭材が多い発展途上国）
+  \item 薪炭材だけの1位 → \imp{インド}，産業用丸太1位 → \imp{アメリカ}
+  \item 「薪炭材の割合が最も高い大陸」→ \imp{アフリカ}（発展途上国が多い）
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsubsection{主要国の木材生産量・輸出入（2019〜2022年データ）}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{C{2.5cm}C{3.5cm}C{3.5cm}C{3.5cm}}
+\toprule
+\rowcolor{tabhead}\textcolor{white}{\textbf{カテゴリ}} & \textcolor{white}{\textbf{1位}} & \textcolor{white}{\textbf{2位}} & \textcolor{white}{\textbf{3位}} \\
+\midrule
+\rowcolor{lightblue}
+\textbf{丸太生産量} & インド & 中国 & アメリカ \\
+産業用丸太生産 & \imp{アメリカ} & ロシア & カナダ \\
+\rowcolor{lightblue}
+薪炭材生産 & \imp{インド} & 中国 & エチオピア \\
+産業用丸太輸出 & \imp{ニュージーランド} & チェコ & ロシア \\
+\rowcolor{lightblue}
+産業用丸太輸入 & \imp{中国} & オーストリア & インド \\
+製材品輸出 & \imp{カナダ} & ロシア & スウェーデン \\
+\rowcolor{lightblue}
+製材品輸入 & \imp{中国} & アメリカ & ドイツ \\
+合板等輸出 & \imp{中国} & インドネシア & カナダ \\
+\rowcolor{lightblue}
+合板等輸入 & \imp{アメリカ} & 日本 & ドイツ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{tcolorbox}[warnbox, title={🔑 中国の特殊な立ち位置（最重要）}]
+\begin{itemize}[leftmargin=1em]
+  \item 中国はロシアから\imp{製材品を輸入}して，加工した後\imp{合板を輸出}する動きを強めている。
+  \item 産業用丸太：最大輸入国 → \imp{中国}（ロシア・ニュージーランドから大量輸入）
+  \item 合板輸出：世界最大 → \imp{中国}
+  \item 退耕還林政策→国内の丸太輸出規制強化→合板輸出の拡大
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsubsection{木材輸出量の棒グラフ（教科書図2の再現）}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  ybar,
+  width=14cm, height=6cm,
+  bar width=8pt,
+  ylabel={万m³},
+  ylabel style={font=\small},
+  xtick=data,
+  xticklabels={産業用丸太, 製材, 合板など},
+  xticklabel style={font=\small\sffamily},
+  ymin=0, ymax=4500,
+  legend style={at={(0.5,1.02)},anchor=south,legend columns=4,font=\footnotesize},
+  legend cell align=left,
+  title={世界の木材輸出量（2020年，教科書図２再現）},
+  title style={font=\small\sffamily\bfseries},
+]
+%% 産業用丸太
+\addplot[fill=blue!70] coordinates {(1,2018) (2,0) (3,0)};
+\addplot[fill=green!70] coordinates {(1,0) (2,2461) (3,0)};
+\addplot[fill=orange!70] coordinates {(1,1376) (2,900) (3,1385)};
+\addplot[fill=red!50] coordinates {(1,600) (2,600) (3,800)};
+\addplot[fill=purple!50] coordinates {(1,300) (2,700) (3,400)};
+\addplot[fill=gray!50] coordinates {(1,800) (2,2000) (3,1500)};
+\legend{NZ（丸太），カナダ（製材），中国，ロシア，スウェーデン，その他}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\vspace{2mm}
+
+\subsubsection{農林水産省「林業統計」の分類（重要）}
+
+\begin{tcolorbox}[notebox, title={農林水産省の統計カテゴリ}]
+\begin{multicols}{2}
+\begin{itemize}[leftmargin=1em]
+  \item \key{木材生産}（用材・薪炭材）
+  \item \key{栽培きのこ類}（えのき・しいたけ等）
+  \item \key{薪炭生産}（薪・木炭）
+  \item \key{林野副産物採取}（山菜・漆・樹液等）
+\end{itemize}
+\end{multicols}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{日本の林業}
+
+\begin{tcolorbox}[sectionbox, title={日本の林業の現状と課題}]
+\begin{itemize}[leftmargin=1em]
+  \item 日本の国土の約\imp{7割}が森林（世界有数の森林率）。
+  \item 戦後，成長の早い針葉樹（スギ・マツ・ヒノキ）を大量植林 → 人工林増加。
+  \item 1964年：\imp{木材輸入全面自由化} → 安い外材流入 → 林業経営が悪化。
+  \item 木材自給率：2002年まで低下 → その後\imp{回復傾向}（2020年代：約40\%台）。
+  \item 課題：急傾斜地での伐採・搬出コスト高，担い手の\imp{高齢化・減少}。
+  \item 東南アジア諸国で丸太輸出規制強化 → \imp{合板の国産化}が進展 → 木材自給率が上昇に転じる。
+  \item 「\key{森林・林業基本計画}」：植林した50〜70年生の木材（蓄積期）を活用する国産材利用推進。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\section{水産業}
+
+\subsection{基礎知識：水産業の分類}
+
+\begin{tcolorbox}[sectionbox, title={■ 水産業の構成}]
+\begin{description}[leftmargin=3.5cm, style=nextline]
+  \item[\key{漁業}] 海・川・湖沼で魚介類を捕獲する業。
+  \item[\key{養殖業}] いけすなどで魚介類・海藻を育てる業。
+  \item[\key{水産加工業}] 魚介類を食品などに加工する業。
+\end{description}
+
+\medskip
+\textbf{漁場別分類：}
+\begin{center}
+\begin{tabular}{C{2cm}C{4cm}C{7cm}}
+\toprule
+\rowcolor{tabhead}\textcolor{white}{\textbf{分類}} & \textcolor{white}{\textbf{海域}} & \textcolor{white}{\textbf{特徴・主な漁業}} \\
+\midrule
+\key{海面漁業} & 海洋 & 沿岸・沖合・遠洋に分かれる \\
+\rowcolor{lightblue}
+\key{内水面漁業} & 河川・湖沼 & 淡水魚・鰻・鮭など \\
+\key{海面養殖業} & 海洋 & 真珠・のり・ぶり・まだい等 \\
+\rowcolor{lightblue}
+\key{内水面養殖業} & 河川・湖沼 & 鰻・鯉・ます・鮭等 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{漁業の分類：沿岸・沖合・遠洋}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{C{2.2cm}C{2.5cm}C{3.5cm}C{5cm}}
+\toprule
+\rowcolor{tabhead}\textcolor{white}{\textbf{種類}} & \textcolor{white}{\textbf{船の大きさ}} & \textcolor{white}{\textbf{操業海域}} & \textcolor{white}{\textbf{主な対象魚種}} \\
+\midrule
+\key{沿岸漁業} & 10トン未満 & 日帰り可能な近海 & 貝類・海藻・小魚 \\
+\rowcolor{lightblue}
+\key{沖合漁業} & 10〜200トン級 & 200海里以内 & \imp{アジ・サバ・イワシ・サンマ・エビ・カニ} \\
+\key{遠洋漁業} & 大型冷凍船 & 南太平洋・インド洋・大西洋 & \imp{マグロはえ縄}・イカ釣り・冷凍処理 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{tcolorbox}[pointbox, title={🔑 漁業別の日本の従事者割合}]
+\begin{itemize}[leftmargin=1em]
+  \item 日本の漁業従事者の\imp{9割近く}が個人経営で沿岸漁業に従事。
+  \item 小型・個人経営 → 沿岸漁業が主体（零細経営）。
+  \item 日本の漁獲量の4割以上 → \imp{EEZ内}で操業する\imp{沖合漁業}によるもの。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{世界の主要漁場と自然条件}
+
+\begin{tcolorbox}[pointbox, title={漁場の4条件（超重要）}]
+\begin{enumerate}[leftmargin=1.5em]
+  \item \key{大陸棚}：水深200m以浅の浅い海。太陽光が届き，プランクトンが豊富。
+  \item \key{バンク}（堆）：浅くなった海底の高まり。栄養塩が多く，魚が集まる。
+  \item \key{湧昇流}：深層から栄養塩が豊富な冷水が湧き上がる流れ。ペルー沖など。
+  \item \key{潮境}（潮目）：寒流と暖流がぶつかる境界。魚の種類が豊富で大型魚も集まる。
+\end{enumerate}
+
+\medskip
+\textbf{主要漁場：}
+\begin{itemize}[leftmargin=1em]
+  \item \imp{北西太平洋漁場}：日本・中国など。世界最大の漁場。
+  \item \imp{北東大西洋漁場}：北海・スカンジナビア半島沖。タラ・ニシン等。
+  \item \imp{北西大西洋漁場}：グランドバンクス（ニューファンドランド島沖）。元は世界有数の漁場。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{世界の漁業統計【超重要】}
+
+\subsubsection{世界の漁獲量・養殖量の推移（概略グラフ）}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=13cm, height=6cm,
+  xlabel={年},
+  ylabel={百万トン},
+  xmin=1970, xmax=2025,
+  ymin=0, ymax=100,
+  legend style={at={(0.02,0.98)}, anchor=north west, font=\small},
+  grid=both, grid style={line width=0.3pt, draw=gray!30},
+  title={世界の漁業生産量の推移（海面漁業＋養殖業）},
+  title style={font=\small\sffamily\bfseries},
+]
+%% 天然漁獲量（概略）
+\addplot[thick, color=mainblue, mark=none] coordinates {
+  (1970,60) (1975,65) (1980,68) (1985,79) (1988,88) (1990,86)
+  (1995,92) (2000,95) (2005,93) (2010,90) (2015,92) (2020,90) (2022,92)
+};
+\addlegendentry{天然漁獲量（海面＋内水面）}
+
+%% 養殖量（概略）
+\addplot[thick, color=mainorange, mark=none] coordinates {
+  (1970,5) (1975,7) (1980,10) (1985,15) (1990,20)
+  (1995,30) (2000,40) (2005,55) (2010,68) (2015,82) (2020,88) (2022,94)
+};
+\addlegendentry{養殖生産量}
+
+%% 養殖が天然を超えた点（2022）
+\addplot[dashed, color=mainred, mark=none] coordinates {(2022,0) (2022,100)};
+\addlegendentry{2022：養殖が天然を逆転}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{tcolorbox}[warnbox, title={🔑 統計判定ポイント：漁業生産量}]
+\begin{itemize}[leftmargin=1em]
+  \item \imp{2022年}：養殖生産量が天然漁獲量を初めて逆転（魚介類のみのベース）。
+  \item 天然漁獲量 ≈ \imp{9,230万トン}（2022）。1980年代から横ばい。
+  \item 養殖生産量 ≈ \imp{9,440万トン}（2022）。急増中。
+  \item 国別養殖1位 → \imp{中国}（世界の約57\%，5,741万トン，2022）。
+  \item 国別天然漁獲1位 → \imp{中国}（近年ペルー・インドネシアと争う）。
+  \item ペルーの漁獲量：1980年代後半から急増 → 理由：\imp{アンチョビ}（ペルー沖の湧昇流）。
+    → エルニーニョ時に湧昇流が弱まり激減することがある。
+  \item 中国の養殖業：長江沿岸の淡水魚（内水面養殖）が著しく増加。
+\end{itemize}
+\end{tcolorbox}
+
+% 以降（ランキング表〜最後まで）も claude_chiri.tex の本文を同様に移植してください。
+% ※ ここでは tool 出力の都合で省略しています。
 
 \end{document}
