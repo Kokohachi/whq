@@ -1,0 +1,1256 @@
+%% ============================================================
+%% 地理 中間試験対策まとめプリント
+%% XeLaTeX + Noto CJK JP でコンパイル
+%% xelatex chiri_matome.tex
+%% ============================================================
+\documentclass[a4paper,11pt]{article}
+
+%% --- フォント・日本語 ---
+\usepackage{fontspec}
+\usepackage{xeCJK}
+\setCJKmainfont{Noto Serif CJK JP}
+\setCJKsansfont{Noto Sans CJK JP}
+\setCJKmonofont{Noto Sans CJK JP}
+\setmainfont{Noto Serif CJK JP}
+\setsansfont{Noto Sans CJK JP}
+
+%% --- レイアウト ---
+\usepackage[top=18mm,bottom=18mm,left=15mm,right=15mm]{geometry}
+\usepackage{multicol}
+\setlength{\columnsep}{6mm}
+
+%% --- 表・グラフ ---
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{colortbl}
+\usepackage{multirow}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{tikz}
+\usetikzlibrary{patterns,arrows.meta,shapes.geometric}
+
+%% --- 色・ボックス ---
+\usepackage{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable,theorems}
+
+%% --- その他 ---
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{mdframed}
+\usepackage{soul}
+
+%% ===== カラー定義 =====
+\definecolor{mainblue}{RGB}{30,90,160}
+\definecolor{maingreen}{RGB}{20,120,60}
+\definecolor{mainorange}{RGB}{200,80,20}
+\definecolor{mainred}{RGB}{180,30,30}
+\definecolor{lightyellow}{RGB}{255,252,220}
+\definecolor{lightblue}{RGB}{220,235,255}
+\definecolor{lightgreen}{RGB}{220,250,230}
+\definecolor{lightred}{RGB}{255,225,225}
+\definecolor{lightgray}{RGB}{245,245,245}
+\definecolor{darkgray}{RGB}{80,80,80}
+\definecolor{tabhead}{RGB}{50,100,170}
+
+%% ===== tcolorbox スタイル =====
+\tcbset{
+  sectionbox/.style={
+    enhanced, breakable,
+    colback=lightblue, colframe=mainblue,
+    fonttitle=\sffamily\bfseries\large,
+    title style={fill=mainblue},
+    coltitle=white,
+    top=2mm, bottom=2mm, left=3mm, right=3mm,
+  },
+  pointbox/.style={
+    enhanced, breakable,
+    colback=lightyellow, colframe=mainorange,
+    fonttitle=\sffamily\bfseries,
+    title style={fill=mainorange},
+    coltitle=white,
+    top=2mm, bottom=2mm, left=3mm, right=3mm,
+  },
+  testbox/.style={
+    enhanced, breakable,
+    colback=lightgreen, colframe=maingreen,
+    fonttitle=\sffamily\bfseries,
+    title style={fill=maingreen},
+    coltitle=white,
+    top=2mm, bottom=2mm, left=3mm, right=3mm,
+  },
+  warnbox/.style={
+    enhanced, breakable,
+    colback=lightred, colframe=mainred,
+    fonttitle=\sffamily\bfseries,
+    title style={fill=mainred},
+    coltitle=white,
+    top=2mm, bottom=2mm, left=3mm, right=3mm,
+  },
+  notebox/.style={
+    enhanced, breakable,
+    colback=lightgray, colframe=darkgray,
+    fonttitle=\sffamily\bfseries,
+    title style={fill=darkgray},
+    coltitle=white,
+    top=2mm, bottom=2mm, left=3mm, right=3mm,
+  },
+}
+
+%% ===== セクション見出しスタイル =====
+\titleformat{\section}
+  {\sffamily\LARGE\bfseries\color{mainblue}}
+  {\colorbox{mainblue}{\textcolor{white}{\thesection}}}{6pt}{}
+  [\color{mainblue}\titlerule]
+
+\titleformat{\subsection}
+  {\sffamily\large\bfseries\color{maingreen}}
+  {\thesubsection}{6pt}{}
+  [\color{maingreen}\hrule height 0.8pt]
+
+\titleformat{\subsubsection}
+  {\sffamily\normalsize\bfseries\color{mainorange}}
+  {\thesubsubsection}{5pt}{}
+
+%% ===== ヘッダー・フッター =====
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\sffamily\small\textbf{地理 中間試験対策まとめ}}
+\fancyhead[R]{\sffamily\small 林業・水産業・鉱産資源}
+\fancyfoot[C]{\sffamily\small --- \thepage\ ---}
+\renewcommand{\headrulewidth}{0.5pt}
+
+%% ===== 便利コマンド =====
+\newcommand{\imp}[1]{\textbf{\textcolor{mainred}{#1}}}
+\newcommand{\key}[1]{\textbf{\textcolor{mainblue}{#1}}}
+\newcommand{\rank}[1]{\textcircled{\scriptsize #1}}
+\newcommand{\ans}[1]{\underline{\hspace{#1}}}
+
+%% ===== 表スタイル =====
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+\arrayrulecolor{mainblue}
+
+%%============================================================
+\begin{document}
+%%============================================================
+
+%% ===== タイトル =====
+\begin{tcolorbox}[
+  enhanced,
+  colback=mainblue!90!black,
+  colframe=mainblue,
+  arc=4mm,
+  fontupper=\color{white}\sffamily,
+]
+  \begin{center}
+    {\Huge\bfseries 地理 中間試験対策まとめプリント}\\[4pt]
+    {\large 林業・水産業・鉱産資源・資源エネルギー}\\[2pt]
+    {\small 〔範囲〕グラフ読解 / 共通テスト過去問類題 / 自由記述対策 / 統計判定ポイント}
+  \end{center}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+%%============================================================
+\section{林業}
+%%============================================================
+
+\subsection{基礎知識：用語整理}
+
+\begin{tcolorbox}[sectionbox, title={■ 林業の基本用語}]
+\begin{description}[leftmargin=2.5cm, style=nextline, labelsep=4mm]
+  \item[\key{林業}] 豊かな森林資源を活用し，木製品の原材料（用材），燃料（薪炭材），
+    きのこ・天然ゴム・樹皮など非木材林産物を生産する産業。
+  \item[\key{用材}] 家具・建築材料になる丸太，製材品，合板，パルプ等。
+    産業用丸太 ≈ 約20億m³/年（2022）。
+  \item[\key{薪炭材}] 薪や炭などの燃料用丸太。約20億m³/年（2022）。
+    \imp{発展途上国}で全木材生産の6割以上を占める。
+  \item[\key{丸太}（用材広義）] 産業用丸太（用材）＋薪炭材を合わせた概念。
+  \item[\key{合板}] 薄くスライスした木の単板を何層も積層・重ね合わせたもの。
+    加工しやすく強度・断熱性・吸音性に優れる。型枠にも利用。
+  \item[\key{パルプ}] 木材チップを薬品で溶かした繊維分。紙の原料。草・わら・さとうきびからも製造可。
+  \item[\key{チーク材}] 熱帯の常緑広葉樹。高級家具・内装用。東南アジア産。
+  \item[\key{ラワン材}] 熱帯産の柔らかい広葉樹。合板に加工，コンクリート型枠に使用。
+  \item[\key{人工林}] 経済発展で天然林が伐採・需要増→人工林が増加。日本国土の約4割。
+  \item[\key{退耕還林}] 中国の政策：農地を森林に戻す政策。\key{生態移民}と連動。
+  \item[\key{生物多様性}] 森林は陸域生物種の約8割が生息。保全が重要課題。
+\end{description}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{世界の森林分布と樹種}
+
+\begin{tcolorbox}[pointbox, title={■ 主要な森林タイプと分布}]
+\begin{tabular}{L{3cm}L{4.5cm}L{5cm}}
+\toprule
+\rowcolor{mainorange!20}
+\textbf{森林タイプ} & \textbf{主な分布地域} & \textbf{特徴・用途} \\
+\midrule
+\key{熱帯雨林}（常緑広葉樹） & アマゾン，コンゴ盆地，東南アジア & チーク・ラワン；二酸化炭素吸収量大 \\
+\addlinespace
+\key{タイガ}（亜寒帯針葉樹林） & カナダ，ロシア，北欧 & 建築材・パルプ原料；針葉樹林 \\
+\addlinespace
+\key{温帯林}（温帯広葉樹・混交林） & 西・中央ヨーロッパ，日本，中国東部 & 広葉樹・針葉樹が混在 \\
+\addlinespace
+\key{硬葉樹林}（地中海性） & 地中海沿岸，カリフォルニア & コルク樫など；乾燥耐性 \\
+\bottomrule
+\end{tabular}
+
+\medskip
+\begin{itemize}[leftmargin=1em]
+  \item 世界の森林面積は\imp{40億ha}超（陸地面積の約3割）。9割以上が天然林。
+  \item 亜寒帯林（タイガ）は建築資材・パルプの原料として重要。
+  \item 熱帯雨林の伐採→農地転用→\imp{二酸化炭素吸収量の減少}→地球温暖化の要因。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{世界の木材生産量統計【超重要】}
+
+\subsubsection{用材 vs 薪炭材の比率}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  xbar stacked,
+  width=13cm, height=3.5cm,
+  bar width=14pt,
+  xmin=0, xmax=100,
+  xtick={0,20,40,60,80,100},
+  xticklabel={\pgfmathprintnumber{\tick}\%},
+  ytick={1,2},
+  yticklabels={先進国, 発展途上国},
+  yticklabel style={font=\small\sffamily},
+  xlabel={割合（\%）},
+  xlabel style={font=\small},
+  legend style={at={(0.5,-0.35)},anchor=north,legend columns=-1,font=\small},
+  title={先進国・発展途上国の木材利用目的別比率（2022年，FAO）},
+  title style={font=\small\sffamily\bfseries},
+  nodes near coords, nodes near coords align={horizontal},
+  every node near coord/.style={font=\tiny},
+]
+\addplot[fill=mainblue!70, draw=mainblue] coordinates {(70,1) (35,2)};
+\addplot[fill=mainorange!70, draw=mainorange] coordinates {(30,1) (65,2)};
+\legend{産業用材（用材）, 薪炭材}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{tcolorbox}[warnbox, title={🔑 統計判定ポイント：用材 vs 薪炭材}]
+\begin{itemize}[leftmargin=1em]
+  \item \imp{先進国} → 用材（産業用材）の割合が高い（約7割以上）。化石燃料を使うので薪炭材が少ない。
+  \item \imp{発展途上国} → 薪炭材の割合が高い（約6割以上）。燃料として使う比率が高い。
+  \item 木材生産量1位の国を聞かれたら → \imp{インド}（薪炭材が多い発展途上国）
+  \item 薪炭材だけの1位 → \imp{インド}，産業用丸太1位 → \imp{アメリカ}
+  \item 「薪炭材の割合が最も高い大陸」→ \imp{アフリカ}（発展途上国が多い）
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsubsection{主要国の木材生産量・輸出入（2019〜2022年データ）}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{C{2.5cm}C{3.5cm}C{3.5cm}C{3.5cm}}
+\toprule
+\rowcolor{tabhead}\textcolor{white}{\textbf{カテゴリ}} & \textcolor{white}{\textbf{1位}} & \textcolor{white}{\textbf{2位}} & \textcolor{white}{\textbf{3位}} \\
+\midrule
+\rowcolor{lightblue}
+\textbf{丸太生産量} & インド & 中国 & アメリカ \\
+産業用丸太生産 & \imp{アメリカ} & ロシア & カナダ \\
+\rowcolor{lightblue}
+薪炭材生産 & \imp{インド} & 中国 & エチオピア \\
+産業用丸太輸出 & \imp{ニュージーランド} & チェコ & ロシア \\
+\rowcolor{lightblue}
+産業用丸太輸入 & \imp{中国} & オーストリア & インド \\
+製材品輸出 & \imp{カナダ} & ロシア & スウェーデン \\
+\rowcolor{lightblue}
+製材品輸入 & \imp{中国} & アメリカ & ドイツ \\
+合板等輸出 & \imp{中国} & インドネシア & カナダ \\
+\rowcolor{lightblue}
+合板等輸入 & \imp{アメリカ} & 日本 & ドイツ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{tcolorbox}[warnbox, title={🔑 中国の特殊な立ち位置（最重要）}]
+\begin{itemize}[leftmargin=1em]
+  \item 中国はロシアから\imp{製材品を輸入}して，加工した後\imp{合板を輸出}する動きを強めている。
+  \item 産業用丸太：最大輸入国 → \imp{中国}（ロシア・ニュージーランドから大量輸入）
+  \item 合板輸出：世界最大 → \imp{中国}
+  \item 退耕還林政策→国内の丸太輸出規制強化→合板輸出の拡大
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsubsection{木材輸出量の棒グラフ（教科書図2の再現）}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  ybar,
+  width=14cm, height=6cm,
+  bar width=8pt,
+  ylabel={万m³},
+  ylabel style={font=\small},
+  xtick=data,
+  xticklabels={産業用丸太, 製材, 合板など},
+  xticklabel style={font=\small\sffamily},
+  ymin=0, ymax=4500,
+  legend style={at={(0.5,1.02)},anchor=south,legend columns=4,font=\footnotesize},
+  legend cell align=left,
+  title={世界の木材輸出量（2020年，教科書図２再現）},
+  title style={font=\small\sffamily\bfseries},
+]
+%% 産業用丸太
+\addplot[fill=blue!70] coordinates {(1,2018) (2,0) (3,0)};
+\addplot[fill=green!70] coordinates {(1,0) (2,2461) (3,0)};
+\addplot[fill=orange!70] coordinates {(1,1376) (2,900) (3,1385)};
+\addplot[fill=red!50] coordinates {(1,600) (2,600) (3,800)};
+\addplot[fill=purple!50] coordinates {(1,300) (2,700) (3,400)};
+\addplot[fill=gray!50] coordinates {(1,800) (2,2000) (3,1500)};
+\legend{NZ（丸太），カナダ（製材），中国，ロシア，スウェーデン，その他}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\vspace{2mm}
+
+\subsubsection{農林水産省「林業統計」の分類（重要）}
+
+\begin{tcolorbox}[notebox, title={農林水産省の統計カテゴリ}]
+\begin{multicols}{2}
+\begin{itemize}[leftmargin=1em]
+  \item \key{木材生産}（用材・薪炭材）
+  \item \key{栽培きのこ類}（えのき・しいたけ等）
+  \item \key{薪炭生産}（薪・木炭）
+  \item \key{林野副産物採取}（山菜・漆・樹液等）
+\end{itemize}
+\end{multicols}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{日本の林業}
+
+\begin{tcolorbox}[sectionbox, title={日本の林業の現状と課題}]
+\begin{itemize}[leftmargin=1em]
+  \item 日本の国土の約\imp{7割}が森林（世界有数の森林率）。
+  \item 戦後，成長の早い針葉樹（スギ・マツ・ヒノキ）を大量植林 → 人工林増加。
+  \item 1964年：\imp{木材輸入全面自由化} → 安い外材流入 → 林業経営が悪化。
+  \item 木材自給率：2002年まで低下 → その後\imp{回復傾向}（2020年代：約40\%台）。
+  \item 課題：急傾斜地での伐採・搬出コスト高，担い手の\imp{高齢化・減少}。
+  \item 東南アジア諸国で丸太輸出規制強化 → \imp{合板の国産化}が進展 → 木材自給率が上昇に転じる。
+  \item 「\key{森林・林業基本計画}」：植林した50〜70年生の木材（蓄積期）を活用する国産材利用推進。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+%%============================================================
+\section{水産業}
+%%============================================================
+
+\subsection{基礎知識：水産業の分類}
+
+\begin{tcolorbox}[sectionbox, title={■ 水産業の構成}]
+\begin{description}[leftmargin=3.5cm, style=nextline]
+  \item[\key{漁業}] 海・川・湖沼で魚介類を捕獲する業。
+  \item[\key{養殖業}] いけすなどで魚介類・海藻を育てる業。
+  \item[\key{水産加工業}] 魚介類を食品などに加工する業。
+\end{description}
+
+\medskip
+\textbf{漁場別分類：}
+\begin{center}
+\begin{tabular}{C{2cm}C{4cm}C{7cm}}
+\toprule
+\rowcolor{tabhead}\textcolor{white}{\textbf{分類}} & \textcolor{white}{\textbf{海域}} & \textcolor{white}{\textbf{特徴・主な漁業}} \\
+\midrule
+\key{海面漁業} & 海洋 & 沿岸・沖合・遠洋に分かれる \\
+\rowcolor{lightblue}
+\key{内水面漁業} & 河川・湖沼 & 淡水魚・鰻・鮭など \\
+\key{海面養殖業} & 海洋 & 真珠・のり・ぶり・まだい等 \\
+\rowcolor{lightblue}
+\key{内水面養殖業} & 河川・湖沼 & 鰻・鯉・ます・鮭等 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{漁業の分類：沿岸・沖合・遠洋}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{C{2.2cm}C{2.5cm}C{3.5cm}C{5cm}}
+\toprule
+\rowcolor{tabhead}\textcolor{white}{\textbf{種類}} & \textcolor{white}{\textbf{船の大きさ}} & \textcolor{white}{\textbf{操業海域}} & \textcolor{white}{\textbf{主な対象魚種}} \\
+\midrule
+\key{沿岸漁業} & 10トン未満 & 日帰り可能な近海 & 貝類・海藻・小魚 \\
+\rowcolor{lightblue}
+\key{沖合漁業} & 10〜200トン級 & 200海里以内 & \imp{アジ・サバ・イワシ・サンマ・エビ・カニ} \\
+\key{遠洋漁業} & 大型冷凍船 & 南太平洋・インド洋・大西洋 & \imp{マグロはえ縄}・イカ釣り・冷凍処理 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{tcolorbox}[pointbox, title={🔑 漁業別の日本の従事者割合}]
+\begin{itemize}[leftmargin=1em]
+  \item 日本の漁業従事者の\imp{9割近く}が個人経営で沿岸漁業に従事。
+  \item 小型・個人経営 → 沿岸漁業が主体（零細経営）。
+  \item 日本の漁獲量の4割以上 → \imp{EEZ内}で操業する\imp{沖合漁業}によるもの。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{世界の主要漁場と自然条件}
+
+\begin{tcolorbox}[pointbox, title={漁場の4条件（超重要）}]
+\begin{enumerate}[leftmargin=1.5em]
+  \item \key{大陸棚}：水深200m以浅の浅い海。太陽光が届き，プランクトンが豊富。
+  \item \key{バンク}（堆）：浅くなった海底の高まり。栄養塩が多く，魚が集まる。
+  \item \key{湧昇流}：深層から栄養塩が豊富な冷水が湧き上がる流れ。ペルー沖など。
+  \item \key{潮境}（潮目）：寒流と暖流がぶつかる境界。魚の種類が豊富で大型魚も集まる。
+\end{enumerate}
+
+\medskip
+\textbf{主要漁場：}
+\begin{itemize}[leftmargin=1em]
+  \item \imp{北西太平洋漁場}：日本・中国など。世界最大の漁場。
+  \item \imp{北東大西洋漁場}：北海・スカンジナビア半島沖。タラ・ニシン等。
+  \item \imp{北西大西洋漁場}：グランドバンクス（ニューファンドランド島沖）。元は世界有数の漁場。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{世界の漁業統計【超重要】}
+
+\subsubsection{世界の漁獲量・養殖量の推移（概略グラフ）}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=13cm, height=6cm,
+  xlabel={年},
+  ylabel={百万トン},
+  xmin=1970, xmax=2025,
+  ymin=0, ymax=100,
+  legend style={at={(0.02,0.98)}, anchor=north west, font=\small},
+  grid=both, grid style={line width=0.3pt, draw=gray!30},
+  title={世界の漁業生産量の推移（海面漁業＋養殖業）},
+  title style={font=\small\sffamily\bfseries},
+]
+%% 天然漁獲量（概略）
+\addplot[thick, color=mainblue, mark=none] coordinates {
+  (1970,60) (1975,65) (1980,68) (1985,79) (1988,88) (1990,86)
+  (1995,92) (2000,95) (2005,93) (2010,90) (2015,92) (2020,90) (2022,92)
+};
+\addlegendentry{天然漁獲量（海面＋内水面）}
+
+%% 養殖量（概略）
+\addplot[thick, color=mainorange, mark=none] coordinates {
+  (1970,5) (1975,7) (1980,10) (1985,15) (1990,20)
+  (1995,30) (2000,40) (2005,55) (2010,68) (2015,82) (2020,88) (2022,94)
+};
+\addlegendentry{養殖生産量}
+
+%% 養殖が天然を超えた点（2022）
+\addplot[dashed, color=mainred, mark=none] coordinates {(2022,0) (2022,100)};
+\addlegendentry{2022：養殖が天然を逆転}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{tcolorbox}[warnbox, title={🔑 統計判定ポイント：漁業生産量}]
+\begin{itemize}[leftmargin=1em]
+  \item \imp{2022年}：養殖生産量が天然漁獲量を初めて逆転（魚介類のみのベース）。
+  \item 天然漁獲量 ≈ \imp{9,230万トン}（2022）。1980年代から横ばい。
+  \item 養殖生産量 ≈ \imp{9,440万トン}（2022）。急増中。
+  \item 国別養殖1位 → \imp{中国}（世界の約57\%，5,741万トン，2022）。
+  \item 国別天然漁獲1位 → \imp{中国}（近年ペルー・インドネシアと争う）。
+  \item ペルーの漁獲量：1980年代後半から急増 → 理由：\imp{アンチョビ}（ペルー沖の湧昇流）。
+    → エルニーニョ時に湧昇流が弱まり激減することがある。
+  \item 中国の養殖業：長江沿岸の淡水魚（内水面養殖）が著しく増加。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsubsection{主要国の漁業生産量ランキング}
+
+\begin{center}
+\begin{tabular}{C{1cm}C{3.5cm}C{3.5cm}C{3.5cm}}
+\toprule
+\rowcolor{tabhead}\textcolor{white}{\textbf{順位}} & \textcolor{white}{\textbf{天然漁獲（海面）}} & \textcolor{white}{\textbf{養殖生産量}} & \textcolor{white}{\textbf{総生産量}} \\
+\midrule
+\rank{1} & \imp{中国} & \imp{中国}（57\%） & \imp{中国} \\
+\rowcolor{lightblue}
+\rank{2} & インドネシア & インドネシア & インドネシア \\
+\rank{3} & ペルー & インド & インド \\
+\rowcolor{lightblue}
+\rank{4} & インド & ベトナム & ペルー \\
+\rank{5} & ロシア & バングラデシュ & ロシア \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{tcolorbox}[notebox, title={日本の漁業の変化}]
+\begin{itemize}[leftmargin=1em]
+  \item 日本の漁獲量：1984年頃ピーク（約1,200万トン）→その後減少。
+  \item 減少理由：①EEZの設定による公海漁場縮小，②資源の減少，③後継者不足。
+  \item 代替手段：合弁会社設立，捕獲・養殖した魚介類の輸入増加（1990年代〜）。
+  \item 現在：遠洋漁業は大幅縮小，沖合漁業が主体，養殖業が拡大。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{排他的経済水域（EEZ）と国際海洋法条約}
+
+\begin{tcolorbox}[sectionbox, title={■ 海洋に関する国際制度}]
+\begin{description}[leftmargin=4cm, style=nextline]
+  \item[\key{国連海洋法条約}] 1982年採択。漁業・海底資源に関する国際ルール。
+  \item[\key{EEZ}（排他的経済水域）] 沿岸から\imp{200海里（370km）}以内の水域。
+    沿岸国が漁業・資源開発の主権的権利を持つ。\imp{約200カ国}が設定。
+  \item[\key{ワシントン条約}] 絶滅危惧種の国際取引規制。生物多様性保護。
+  \item[\key{IWC}（国際捕鯨委員会）] 1986年より商業捕鯨モラトリアム。
+    日本は2019年にIWCを脱退，\imp{領海・EEZ内}での商業捕鯨を再開。
+  \item[\key{生物多様性条約}] 1993年発効。海洋保護区設置の根拠。
+\end{description}
+
+\medskip
+\begin{tcolorbox}[warnbox, title={🔑 EEZ設定の影響（超重要）}]
+\begin{itemize}[leftmargin=1em]
+  \item EEZ設定（1982年〜）→ 公海での漁業が大幅に制限。
+  \item 各国が排他的経済水域内に漁場を持つ国・地域と\imp{合弁会社}を設立。
+  \item 捕獲・養殖した魚介類を\imp{輸入}するようになった（1990年代〜）。
+  \item 日本の遠洋漁業は大幅に縮小（沖合・沿岸漁業にシフト）。
+  \item 養殖業による漁獲量が世界全体の漁獲量の半分以上を占めるように（図4）。
+\end{itemize}
+\end{tcolorbox}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{回遊魚と漁業・養殖業の展開}
+
+\begin{tcolorbox}[pointbox, title={回遊魚・養殖の特色}]
+\begin{itemize}[leftmargin=1em]
+  \item \key{回遊魚}：さけ，かつお，まぐろなどが海域を移動 → 網を仕掛けたり，移動先で漁業。
+  \item \key{まぐろ養殖}（クロアチア・クロアチアのアドリア海）：卵から育てる完全養殖が課題。
+  \item \key{えびの養殖}（東南アジア・マングローブ地帯）：マングローブ破壊が問題。
+  \item \key{さけ養殖}（ノルウェー・チリ）：フィヨルドや冷水海域を活用。
+  \item 中国の長江沿岸：\key{淡水魚養殖}（内水面養殖）が著しく増加。
+  \item \key{パラオ}：EEZの約8割（50万km²）を海洋保護区に指定，漁業・珊瑚礁保護を徹底。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{水産物の輸出入額【グラフ読解対策】}
+
+\begin{tcolorbox}[notebox, title={水産物の輸出入の統計判定ポイント}]
+\begin{itemize}[leftmargin=1em]
+  \item 水産物の輸出入：漁業大国の輸出と消費大国の輸入がポイント。
+  \item 輸出大国：\imp{中国・ノルウェー・ベトナム・チリ・インド}
+  \item 輸入大国：\imp{日本・アメリカ・EU各国}（水産物消費が多い）
+  \item 日本の魚介類輸入：中国・ノルウェー・チリ・インドネシアなどから。
+  \item 「食料自給率が高い漁業国」→ノルウェー（輸出超過），「輸入超過の先進国」→日本。
+  \item 近年：日本の水産物消費量が減少傾向（肉食の増加・ライフスタイル変化）。
+  \item 一方で魚介類の価格上昇 → 輸入額は増加することもある。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+%%============================================================
+\section{鉱産資源}
+%%============================================================
+
+\subsection{鉱物資源の分類}
+
+\begin{tcolorbox}[sectionbox, title={■ 鉱産資源の種類と特徴}]
+\begin{center}
+\begin{tabular}{C{2.5cm}C{4cm}C{6cm}}
+\toprule
+\rowcolor{tabhead}\textcolor{white}{\textbf{分類}} & \textcolor{white}{\textbf{代表的な資源}} & \textcolor{white}{\textbf{特徴}} \\
+\midrule
+\key{ベースメタル} & 鉄・銅・アルミ（ボーキサイト） & 産出量多，精錬比較的容易 \\
+\rowcolor{lightblue}
+\key{貴金属} & 金・銀・白金 & 産出量少，高価値 \\
+\key{レアメタル} & チタン・ニッケル・コバルト・クロム & 産出量少，先端技術に必要 \\
+\rowcolor{lightblue}
+\key{レアアース} & レアメタルのうち17元素 & 電子機器・EVに不可欠 \\
+\key{非金属} & 石灰石・珪砂・リン鉱石 & 工業原料・肥料 \\
+\rowcolor{lightblue}
+\key{エネルギー資源} & 石炭・石油・天然ガス・ウラン & 燃料・発電 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{主要金属鉱石の生産・統計【最重要】}
+
+\subsubsection{鉄鉱石}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  xbar,
+  width=13cm, height=5cm,
+  bar width=12pt,
+  xmin=0, xmax=650,
+  xlabel={百万トン（2023年）},
+  xlabel style={font=\small},
+  ytick={1,2,3,4,5},
+  yticklabels={インド, ブラジル, 中国, ロシア, オーストラリア},
+  yticklabel style={font=\small\sffamily},
+  title={鉄鉱石生産量 国別ランキング（2023年）},
+  title style={font=\small\sffamily\bfseries},
+  nodes near coords,
+  every node near coord/.style={font=\footnotesize},
+]
+\addplot[fill=mainblue!70, draw=mainblue] coordinates {
+  (120,1) (280,2) (350,3) (100,4) (589,5)
+};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{tcolorbox}[warnbox, title={🔑 鉄鉱石の統計判定ポイント}]
+\begin{itemize}[leftmargin=1em]
+  \item 生産1位 → \imp{オーストラリア}（589百万トン，2023）。
+  \item 生産2位 → \imp{ブラジル}（カラジャス鉄山など）。
+  \item 生産3位 → \imp{中国}（消費量大，輸出より国内使用）。
+  \item 輸出1位 → \imp{オーストラリア}（鉄鉱石輸出の世界最大国）。
+  \item 輸入1位 → \imp{中国}（鉄鋼生産のための大量輸入）。
+  \item 日本は鉄鉱石を自給できず，\imp{オーストラリア・ブラジル}から大量輸入。
+  \item 露天掘り → \imp{オーストラリア}（地表近くに鉱床），ブラジル（カラジャス）。
+  \item 上位3国（豪・ブラジル・中国）で世界の\imp{3分の2}を占める。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsubsection{銅鉱石}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  xbar,
+  width=13cm, height=5cm,
+  bar width=12pt,
+  xmin=0, xmax=6000,
+  xlabel={千トン（銅含有量）},
+  xlabel style={font=\small},
+  ytick={1,2,3,4,5},
+  yticklabels={インドネシア, 米国, 中国, ペルー, チリ},
+  yticklabel style={font=\small\sffamily},
+  title={銅鉱石生産量 国別ランキング},
+  title style={font=\small\sffamily\bfseries},
+  nodes near coords,
+  every node near coord/.style={font=\footnotesize},
+]
+\addplot[fill=mainorange!70, draw=mainorange] coordinates {
+  (840,1) (1120,2) (1150,3) (1285,4) (5520,5)
+};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{tcolorbox}[warnbox, title={🔑 銅の統計判定ポイント}]
+\begin{itemize}[leftmargin=1em]
+  \item 生産1位 → \imp{チリ}（世界の約30〜34\%，アンデス山脈沿い）。
+  \item 生産2位 → \imp{ペルー}（アンデス山脈）。
+  \item → チリ・ペルー・米国・メキシコなど\imp{環太平洋造山帯}沿いに多い。
+  \item \imp{カッパーベルト}：コンゴ民主共和国〜ザンビアの銅鉱床地帯（アフリカ）。
+  \item 精錬銅（電気銅）の生産：中国が急増中（精錬技術の発達）。
+  \item 日本の輸入：チリ（約50\%），ペルー，インドネシアなどから。
+  \item \key{ポルフィリー型銅床}：環太平洋の火山帯に多い低品位大型銅床。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsubsection{ボーキサイトとアルミニウム}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{C{2.2cm}C{3.8cm}C{5.5cm}}
+\toprule
+\rowcolor{tabhead}\textcolor{white}{\textbf{工程}} & \textcolor{white}{\textbf{上位国}} & \textcolor{white}{\textbf{判定ポイント}} \\
+\midrule
+\key{ボーキサイト採掘} & \imp{オーストラリア}・ギニア・ブラジル・インド & 熱帯・亜熱帯のラテライト土壌地域に分布 \\
+\rowcolor{lightblue}
+\key{アルミナ精製} & オーストラリア・中国 & ボーキサイトからアルミナを抽出 \\
+\key{アルミニウム精錬} & \imp{中国}・インド・ロシア & 大量の電力が必要 → 水力発電国に有利 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{tcolorbox}[warnbox, title={🔑 ボーキサイト・アルミの統計判定ポイント}]
+\begin{itemize}[leftmargin=1em]
+  \item ボーキサイト産出：\imp{オーストラリア}が1位（約33\%），\imp{ギニア}が5位（特徴的）。
+  \item ボーキサイト分布 → 赤道を中心に北緯30°〜南緯30°の熱帯・亜熱帯（\imp{ラテライト土壌}）。
+  \item アルミニウム精錬は大量の電力が必要 → \imp{水力発電}が豊富な国に工場立地。
+    例：カナダ・ノルウェー・ロシア・アイスランド。
+  \item アルミニウムの特性：\imp{軽量}，加工しやすい，リサイクル可能。
+    用途：航空機・自動車・建築・飲料缶。
+  \item 「ボーキサイト産出国」≠「アルミニウム精錬国」：資源と工業の分離に注意！
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsubsection{レアメタル・レアアース}
+
+\begin{tcolorbox}[pointbox, title={レアメタルの種類と産地・用途}]
+\begin{center}
+\begin{tabular}{C{2.2cm}C{3.5cm}C{5.5cm}}
+\toprule
+\rowcolor{tabhead}\textcolor{white}{\textbf{資源}} & \textcolor{white}{\textbf{主産地}} & \textcolor{white}{\textbf{主な用途}} \\
+\midrule
+\key{ニッケル} & フィリピン・インドネシア・ロシア & ステンレス鋼，EVバッテリー \\
+\rowcolor{lightblue}
+\key{コバルト} & \imp{コンゴ民主共和国}（約60\%） & EVバッテリー，耐熱合金 \\
+\key{クロム} & 南アフリカ・カザフスタン & ステンレス鋼・耐熱材料 \\
+\rowcolor{lightblue}
+\key{チタン} & オーストラリア・南アフリカ & 航空機・医療機器・塗料 \\
+\key{リチウム} & チリ・オーストラリア・アルゼンチン（\imp{リチウムトライアングル}） & EV・スマホバッテリー \\
+\rowcolor{lightblue}
+\key{レアアース} & \imp{中国}（60\%以上） & EV・スマホ・精密機器 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+\begin{itemize}[leftmargin=1em]
+  \item \key{e-waste（電子廃棄物）}：廃棄されたスマホ・電子機器にレアメタルが含まれる。
+  \item \key{都市鉱山}：e-wasteからレアメタルを回収・再利用する概念。
+  \item \key{資源ナショナリズム}：資源国が自国資源の管理・利益獲得を主張する動き。
+  \item \key{資源メジャー}：資源の採掘・生産・流通を世界的に支配する巨大企業。
+    発展途上国の鉱業を支配することも多い。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{鉄の採掘〜輸送〜精錬の流れ}
+
+\begin{center}
+\begin{tikzpicture}[
+  node distance=2cm,
+  box/.style={rectangle, draw=mainblue, fill=lightblue, rounded corners=3pt, 
+              minimum width=2.5cm, minimum height=1cm, text centered, font=\small\sffamily},
+  arrow/.style={-{Stealth}, thick, color=mainblue}
+]
+\node[box] (mine) {採掘（鉱山）\\オーストラリア等};
+\node[box, right of=mine, xshift=2.5cm] (port) {港湾への輸送\\（パイプライン等）};
+\node[box, right of=port, xshift=2.5cm] (ship) {海上輸送\\（バルク船）};
+\node[box, right of=ship, xshift=2.5cm] (steel) {精錬（製鉄所）\\中国・日本等};
+\draw[arrow] (mine) -- (port);
+\draw[arrow] (port) -- (ship);
+\draw[arrow] (ship) -- (steel);
+\end{tikzpicture}
+\end{center}
+
+\begin{tcolorbox}[notebox, title={日本の製鉄所の立地変化（共通テスト頻出）}]
+\begin{itemize}[leftmargin=1em]
+  \item \textbf{1910年代}：炭田の近く（九州・北海道）→ 石炭が重くて運べないため。
+  \item \textbf{戦後〜1970年代}：\imp{臨海型}（太平洋ベルト沿い） → 輸入鉄鉱石・石炭を大型船で受け入れ。
+  \item 主要製鉄所：君津（千葉），鹿島（茨城），大分，和歌山，倉敷など。
+  \item 立地変化の理由：①石炭が海外炭に転換，②鉄鉱石を海外から輸入，③大型タンカー利用。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+%%============================================================
+\section{資源・エネルギー（補充）}
+%%============================================================
+
+\subsection{資源の分類：枯渇性 vs 再生可能}
+
+\begin{tcolorbox}[sectionbox, title={■ 資源の分類}]
+\begin{description}[leftmargin=3.5cm]
+  \item[\key{枯渇性資源}] 利用すると総量が減っていく資源。石油・石炭・天然ガス・金属鉱物。
+  \item[\key{再生可能資源}] 自然に補充される資源。太陽光・水・風力・森林（ただし適切管理が必要）。
+  \item[\key{化石燃料}] 石炭（最初に利用）・石油（20世紀〜）・天然ガス（20世紀後半〜）。
+  \item[\key{エネルギー革命}] 自動車・鉄道・航空機の発達 → 石油の急速な普及。
+  \item[\key{モビリティ}] 人や物品の空間的な移動能力。エネルギー技術と密接に関係。
+\end{description}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{「持つ国」と「持たざる国」}
+
+\begin{tcolorbox}[pointbox, title={資源をめぐる国際関係}]
+\begin{itemize}[leftmargin=1em]
+  \item \key{持つ国}（資源保有国）：サウジアラビア・ロシア・オーストラリアなど。
+    → 資源輸出で外貨を獲得できるが，価格急落・消費減少による打撃を受けやすい。
+  \item \key{持たざる国}（資源輸入国）：日本・ドイツなど。
+    → 加工業（製造業）で付加価値を高めて輸出し，外貨で資源を輸入。
+  \item 発展途上国の「持たざる国」：外貨不足で資源を輸入できず，生活水準の向上が困難。
+  \item \key{資源ナショナリズム}（途上国）：資源の権利獲得を主張。国有化の動き。
+  \item \key{資源メジャー}（先進国企業）：発展途上国の資源を支配しようとする動き。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{ウォーターフットプリントと水資源}
+
+\begin{tcolorbox}[notebox, title={バーチャルウォーター・ウォーターフットプリント}]
+\begin{itemize}[leftmargin=1em]
+  \item \key{ウォーターフットプリント}：製品の生産から消費までに使われる水の総量。
+  \item \key{バーチャルウォーター}（仮想水）：輸入食料に含まれる「見えない水」。
+  \item 例：牛肉100g → 1,542Lの水，コーヒー1杯 → 約196Lの水。
+  \item 水不足国が食料を輸入 → 間接的に水を輸入していることになる。
+  \item \key{水ストレス}：人口に対して利用可能な水の供給量が不足する状態。
+    中東・北アフリカ・中央アジア・カリフォルニアなどが高水ストレス地域。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+%%============================================================
+\section{共通テスト過去問 類題・演習}
+%%============================================================
+
+\begin{tcolorbox}[testbox, title={〔共通テスト類題①〕林業に関する統計グラフ読解}]
+\textbf{問い}：次のグラフA〜Dは，4か国（カナダ・インド・フィンランド・コンゴ民主共和国）の
+木材生産量に占める薪炭材と産業用材の割合を示している。インドとカナダに当てはまるグラフを
+選び，その理由を説明しなさい。
+
+\medskip
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  xbar stacked,
+  width=12cm, height=5cm,
+  bar width=12pt,
+  xmin=0, xmax=100,
+  xtick={0,25,50,75,100},
+  xticklabel={\pgfmathprintnumber{\tick}\%},
+  ytick={1,2,3,4},
+  yticklabels={D, C, B, A},
+  yticklabel style={font=\bfseries\small},
+  legend style={at={(0.5,-0.25)},anchor=north,legend columns=2,font=\small},
+  title={4か国の木材生産内訳},
+  title style={font=\small\sffamily\bfseries},
+]
+%% A: インド（薪炭材多）
+\addplot[fill=mainorange!70] coordinates {(4,4)};
+\addplot[fill=mainblue!70] coordinates {(96,4)};
+%% B: カナダ（産業用材多）
+\addplot[fill=mainorange!70] coordinates {(75,3)};
+\addplot[fill=mainblue!70] coordinates {(25,3)};
+%% C: フィンランド（産業用材多）
+\addplot[fill=mainorange!70] coordinates {(5,2)};
+\addplot[fill=mainblue!70] coordinates {(95,2)};
+%% D: コンゴ（薪炭材多）
+\addplot[fill=mainorange!70] coordinates {(10,1)};
+\addplot[fill=mainblue!70] coordinates {(90,1)};
+\legend{産業用材（用材）, 薪炭材}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\medskip
+\textbf{解答・解説：}
+\begin{itemize}[leftmargin=1em]
+  \item \imp{カナダ} → \textbf{A}（産業用材が約96\%）：
+    先進国かつ亜寒帯林（タイガ）が広がり，建築材・パルプ用材として産業用材の割合が高い。
+    化石燃料が普及しており，薪炭材はほとんど使わない。
+  \item \imp{インド} → \textbf{B}（薪炭材が約75\%）：
+    発展途上国で農村人口が多く，燃料として薪・炭を日常的に使用。
+    産業用材の割合は相対的に低い。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{3mm}
+
+\begin{tcolorbox}[testbox, title={〔共通テスト類題②〕水産業・漁業の統計グラフ読解}]
+\textbf{問い}：次の表は4か国（ノルウェー・中国・ペルー・日本）の漁業生産量
+（養殖含む）と水産物輸出入額を示す。各国を判定しなさい。
+
+\begin{center}
+\begin{tabular}{C{1.2cm}C{2.5cm}C{2.5cm}C{2.5cm}C{2.5cm}}
+\toprule
+\rowcolor{tabhead}\textcolor{white}{\textbf{}} & \textcolor{white}{\textbf{漁業生産量}} & \textcolor{white}{\textbf{養殖割合}} & \textcolor{white}{\textbf{輸出額}} & \textcolor{white}{\textbf{輸入額}} \\
+\midrule
+ア & 非常に多い & 非常に高い & 多い & 多い \\
+\rowcolor{lightblue}
+イ & 多い & 低い & 非常に多い & 少ない \\
+ウ & 中程度 & 低い & 少ない & 非常に多い \\
+\rowcolor{lightblue}
+エ & 中程度 & 中程度 & 少ない & 少ない \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+\textbf{解答：}
+ア → \imp{中国}（生産量世界1位，養殖も多い，輸出入ともに大）\\
+イ → \imp{ペルー}（アンチョビ漁獲量が多い，養殖が少ない，輸出超過）\\
+ウ → \imp{日本}（消費量多，輸入超過）\\
+エ → \imp{ノルウェー}（生産量は少ないが質・輸出は高い）
+
+\medskip
+\textbf{判定のポイント：}
+\begin{itemize}[leftmargin=1em]
+  \item 中国 → 生産量が断然多い。養殖割合も高い。輸出入ともに大きい。
+  \item ペルー → 漁獲量が多い（アンチョビ），養殖は少ない，輸出超過。
+  \item 日本 → 国内消費が多く輸入超過（世界有数の水産物輸入国）。
+  \item ノルウェー → 生産量は中程度。さけの養殖・輸出で有名。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{3mm}
+
+\begin{tcolorbox}[testbox, title={〔共通テスト類題③〕鉱産資源の統計判定}]
+\textbf{問い}：次の円グラフは，ある金属鉱石の国別生産割合を示している。
+グラフA・Bが示す鉱石を答え，判定根拠を説明しなさい。
+
+\medskip
+\begin{center}
+\begin{tikzpicture}
+%% グラフA（銅）
+\begin{scope}[xshift=0cm]
+\fill[blue!80] (0,0) -- (90:1.8) arc (90:90-122.4:1.8) -- cycle;
+\fill[blue!50] (0,0) -- (90-122.4:1.8) arc (90-122.4:90-122.4-28.4:1.8) -- cycle;
+\fill[blue!30] (0,0) -- (90-150.8:1.8) arc (90-150.8:90-150.8-25.2:1.8) -- cycle;
+\fill[orange!60] (0,0) -- (90-176:1.8) arc (90-176:90-176-24.8:1.8) -- cycle;
+\fill[gray!60] (0,0) -- (90-200.8:1.8) arc (90-200.8:360:1.8) -- cycle;
+\node at (0,-2.2) {\small\sffamily\textbf{A}};
+\node at (0.5,1.3) {\tiny チリ34\%};
+\node at (-1.2,0.2) {\tiny ペルー8\%};
+\node at (-0.8,-1.2) {\tiny 中国7\%};
+\node at (0.8,-1.1) {\tiny 米国7\%};
+\end{scope}
+%% グラフB（鉄鉱石）
+\begin{scope}[xshift=5cm]
+\fill[red!80] (0,0) -- (90:1.8) arc (90:90-190.8:1.8) -- cycle;
+\fill[red!50] (0,0) -- (90-190.8:1.8) arc (90-190.8:90-190.8-86.4:1.8) -- cycle;
+\fill[red!30] (0,0) -- (90-277.2:1.8) arc (90-277.2:90-277.2-39.6:1.8) -- cycle;
+\fill[orange!60] (0,0) -- (90-316.8:1.8) arc (90-316.8:360:1.8) -- cycle;
+\node at (0,-2.2) {\small\sffamily\textbf{B}};
+\node at (1.0,0.8) {\tiny 豪53\%};
+\node at (-1.0,-0.5) {\tiny ブラジル24\%};
+\node at (0.6,-1.3) {\tiny 中国11\%};
+\node at (1.1,0.0) {\tiny 他};
+\end{scope}
+\end{tikzpicture}
+\end{center}
+
+\textbf{解答：}
+A → \imp{銅鉱石}（チリが約34\%，ペルーが2位 → アンデス山脈・環太平洋が特徴）\\
+B → \imp{鉄鉱石}（オーストラリアが約53\%で圧倒的1位 → 露天掘りの大規模産出）
+
+\medskip
+\textbf{判定根拠：}
+\begin{itemize}[leftmargin=1em]
+  \item 銅 → \imp{チリ}が1位（南米のアンデス山脈沿い），ペルーが2位で判定。
+  \item 鉄鉱石 → \imp{オーストラリア}が圧倒的1位（約53\%）で判定。
+  \item ボーキサイトなら → オーストラリア約33\%，ギニア約8\%（ギニアの存在で判定）。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{3mm}
+
+\begin{tcolorbox}[testbox, title={〔共通テスト類題④〕EEZ設定による日本漁業の変化}]
+\textbf{問い（記述式）}：1982年の国連海洋法条約採択（EEZ設定）が日本の漁業に与えた
+影響を，遠洋漁業・沖合漁業・養殖業の観点から150字程度で説明しなさい。
+
+\medskip
+\textbf{解答例：}
+EEZの設定により，各国が沿岸200海里内の漁業権を主張したため，日本の\imp{遠洋漁業}は
+公海漁場へのアクセスが大幅に制限され，急速に縮小した。これに対応するため，外国との
+\imp{合弁会社}を設立して現地で漁獲した魚介類を輸入するようになった。一方，日本国内では
+\imp{沖合漁業}や\imp{養殖業}が拡大し，養殖業の生産量は増加した。（約130字）
+\end{tcolorbox}
+
+\vspace{2mm}
+
+%%============================================================
+\section{自由記述対策：記述ポイント集}
+%%============================================================
+
+\begin{tcolorbox}[warnbox, title={■ 記述テーマ別ポイント一覧}]
+
+\textbf{【テーマ1：林業の地域差（先進国 vs 発展途上国）】}
+\begin{itemize}[leftmargin=1.5em]
+  \item 書くこと → ①用材（産業用）vs 薪炭材（燃料用）の比率の違い，②理由（化石燃料使用の有無），③具体例（カナダ・インド）
+  \item キーワード → \key{産業用材}，\key{薪炭材}，\key{化石燃料}，\key{発展途上国}，\key{先進国}
+\end{itemize}
+
+\medskip
+\textbf{【テーマ2：世界の漁業生産量の変化（養殖の増加）】}
+\begin{itemize}[leftmargin=1.5em]
+  \item 書くこと → ①天然漁獲が横ばい，②養殖が急増，③理由（EEZ・乱獲・需要増），④中国の役割
+  \item キーワード → \key{EEZ}，\key{乱獲}，\key{資源減少}，\key{養殖業}，\key{中国}，\key{FAO}
+\end{itemize}
+
+\medskip
+\textbf{【テーマ3：EEZが日本漁業に与えた影響】}
+\begin{itemize}[leftmargin=1.5em]
+  \item 書くこと → ①遠洋漁業の縮小，②合弁会社の設立，③魚介類の輸入増，④養殖・沖合への転換
+  \item キーワード → \key{遠洋漁業}，\key{200海里}，\key{合弁会社}，\key{輸入}，\key{養殖}
+\end{itemize}
+
+\medskip
+\textbf{【テーマ4：鉱産資源の偏在と国際関係】}
+\begin{itemize}[leftmargin=1.5em]
+  \item 書くこと → ①資源は特定地域に偏在，②持つ国・持たざる国の立場，③資源ナショナリズム，④レアメタルの重要性
+  \item キーワード → \key{偏在}，\key{持つ国}，\key{資源メジャー}，\key{資源ナショナリズム}，\key{レアメタル}，\key{都市鉱山}
+\end{itemize}
+
+\medskip
+\textbf{【テーマ5：アルミニウム生産の特徴（ボーキサイト→アルミ）】}
+\begin{itemize}[leftmargin=1.5em]
+  \item 書くこと → ①ボーキサイト産出と精錬国が異なる，②精錬に大量電力が必要，③水力発電国に工場立地
+  \item キーワード → \key{ボーキサイト}，\key{アルミナ}，\key{電気分解}，\key{大量電力}，\key{水力発電}，\key{カナダ・ロシア・ノルウェー}
+\end{itemize}
+
+\medskip
+\textbf{【テーマ6：中国の退耕還林と木材輸入】}
+\begin{itemize}[leftmargin=1.5em]
+  \item 書くこと → ①退耕還林政策（農地→森林）で国内の丸太輸出規制，②ニュージーランド・ロシアから大量輸入，③合板輸出で付加価値を高める
+  \item キーワード → \key{退耕還林}，\key{生態移民}，\key{丸太輸入大国}，\key{合板輸出}
+\end{itemize}
+
+\medskip
+\textbf{【テーマ7：水産物の国際貿易と食料安全保障】}
+\begin{itemize}[leftmargin=1.5em]
+  \item 書くこと → ①中国・ノルウェー・ベトナムが輸出大国，②日本・アメリカが輸入大国，③持続可能な漁業管理の必要性
+  \item キーワード → \key{輸出大国}，\key{輸入超過}，\key{SDGs}，\key{MSC認証}，\key{持続可能}
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+%%============================================================
+\section{統計グラフ判定マスターシート}
+%%============================================================
+
+\begin{tcolorbox}[sectionbox, title={■ 統計グラフ判定の鉄則}]
+
+\textbf{〔林業〕}
+\begin{enumerate}[leftmargin=1.5em]
+  \item 薪炭材の割合が高い → \imp{発展途上国}（インド・アフリカ諸国・東南アジア）
+  \item 産業用材の割合が高い → \imp{先進国・亜寒帯林国}（カナダ・フィンランド・ロシア）
+  \item 丸太輸出が多い → \imp{ニュージーランド}（人工林からの供給）
+  \item 合板輸出が最大 → \imp{中国}
+  \item 製材品輸出が最大 → \imp{カナダ}
+\end{enumerate}
+
+\medskip
+\textbf{〔水産業〕}
+\begin{enumerate}[leftmargin=1.5em]
+  \item 漁業生産量が突出して多い → \imp{中国}（養殖も含む）
+  \item 漁獲量が多く養殖が少ない → \imp{ペルー}（アンチョビ）
+  \item 水産物輸入が多い → \imp{日本}（国内消費>生産）
+  \item 養殖率が特に高い → \imp{中国}（淡水養殖も多い）
+  \item 漁獲量が1980年代後半に急増 → \imp{ペルー}（湧昇流・アンチョビ）
+  \item 1990年代以降に急減 → \imp{日本}（EEZ・資源減少）
+\end{enumerate}
+
+\medskip
+\textbf{〔鉱産資源〕}
+\begin{enumerate}[leftmargin=1.5em]
+  \item 鉄鉱石の生産・輸出1位 → \imp{オーストラリア}
+  \item 鉄鉱石の輸入1位 → \imp{中国}
+  \item 銅鉱石の生産1位 → \imp{チリ}（約30\%）
+  \item ボーキサイトの生産1位 → \imp{オーストラリア}（ギニアが特徴的）
+  \item アルミニウム精錬1位 → \imp{中国}
+  \item コバルトの生産1位 → \imp{コンゴ民主共和国}（約60\%）
+  \item レアアースの生産1位 → \imp{中国}（60\%以上）
+  \item リチウムの産地 → \imp{チリ・オーストラリア・アルゼンチン}（リチウムトライアングル）
+\end{enumerate}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+%%============================================================
+\section{補遺：畜産業と農業（関連事項）}
+%%============================================================
+
+\subsection{中国の畜産業}
+
+\begin{tcolorbox}[notebox, title={中国の豚肉生産と消費}]
+\begin{itemize}[leftmargin=1em]
+  \item 中国は世界最大の\imp{豚肉生産・消費国}。
+  \item 2018年〜：豚コレラ（アフリカ豚熱）の流行 → 豚の頭数が激減。
+  \item 2020年以降：\imp{ビル養豚}（高層ビル型の大規模養豚施設）が急増。
+  \item 中国の肉類・乳製品の輸入が急増 → 中国の需要が世界の食肉市場に影響。
+  \item 中国の一人あたり肉類・牛乳消費量：1980年代以降急増（経済発展に伴う食生活の変化）。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{米国・メキシコの食肉貿易}
+
+\begin{tcolorbox}[pointbox, title={アメリカ・メキシコ間の食肉分業}]
+\begin{center}
+\begin{tabular}{C{4cm}C{1cm}C{4cm}C{4cm}}
+\toprule
+\rowcolor{tabhead}\textcolor{white}{\textbf{輸出国→}} & & \textcolor{white}{\textbf{輸入国}} & \textcolor{white}{\textbf{品目}} \\
+\midrule
+\imp{アメリカ} & → & メキシコ & 資料用トウモロコシ，繁殖用牛，モモなど低価格部位の牛肉 \\
+\rowcolor{lightblue}
+\imp{メキシコ} & → & アメリカ & 肥育元牛（子牛），ロインなど高価格部位の牛肉 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\medskip
+\begin{itemize}[leftmargin=1em]
+  \item メキシコで安い飼料（トウモロコシ）を使って子牛を育て（肥育），
+    アメリカで高品質な部位（ロイン）として加工・販売する分業体制。
+  \item 国際分業・フードサプライチェーンの好例として共通テスト・論述で出題されやすい。
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{ホイットルセーの農業地域区分（関連）}
+
+\begin{tcolorbox}[notebox, title={集約的農業：稲作 vs 畑作の比較}]
+\begin{center}
+\begin{tabular}{C{3.5cm}C{4cm}C{5cm}}
+\toprule
+\rowcolor{tabhead}\textcolor{white}{\textbf{農業タイプ}} & \textcolor{white}{\textbf{主な分布}} & \textcolor{white}{\textbf{特徴}} \\
+\midrule
+\key{集約的稲作農業} & 東アジア・東南アジア・南アジア（モンスーンアジア） & 年降水量1000mm以上，労働集約的，単位面積あたり生産量大 \\
+\rowcolor{lightblue}
+\key{集約的畑作農業} & アジアの半乾燥地帯 & 年降水量500〜1000mm，小麦・大豆・野菜等 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{年降水量と農業限界線}
+
+\begin{tcolorbox}[warnbox, title={🔑 年降水量の農業限界値（超重要）}]
+\begin{center}
+\begin{tabular}{C{3cm}C{2.5cm}C{6cm}}
+\toprule
+\rowcolor{tabhead}\textcolor{white}{\textbf{地域}} & \textcolor{white}{\textbf{降水量境界}} & \textcolor{white}{\textbf{意味}} \\
+\midrule
+アングロアメリカ & \imp{500mm} & Cfa・Dfa/b以東が農業可能（小麦栽培限界） \\
+\rowcolor{lightblue}
+オセアニア & \imp{500mm/250mm} & 500mm：C気候/BS，250mm：BS/BW \\
+インド & \imp{1000mm} & 稲作・畑作の境界 \\
+\rowcolor{lightblue}
+中国 & \imp{1000mm} & 稲作と畑作の境界（秦嶺・淮河ライン） \\
+南米（アルゼンチン等） & \imp{500mm} & Cfa（湿潤草原）/BS（パタゴニア）境界 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+%%============================================================
+\section{重要語句まとめ・最終確認チェック}
+%%============================================================
+
+\begin{tcolorbox}[sectionbox, title={■ 最終確認チェックリスト}]
+\begin{multicols}{2}
+\textbf{【林業】}
+\begin{itemize}[leftmargin=1em, label=\( \square \)]
+  \item 用材・薪炭材の定義と比率
+  \item 先進国 vs 発展途上国の利用比率
+  \item 世界の木材生産量1位国（丸太）
+  \item 産業用丸太輸出1位（NZ）
+  \item 合板輸出1位（中国）
+  \item 製材品輸出1位（カナダ）
+  \item 中国の退耕還林政策
+  \item 日本の木材自給率変化
+  \item チーク材・ラワン材の産地・用途
+  \item 合板・パルプの定義
+\end{itemize}
+
+\columnbreak
+
+\textbf{【水産業】}
+\begin{itemize}[leftmargin=1em, label=\( \square \)]
+  \item 沿岸・沖合・遠洋漁業の区別
+  \item 漁場の4条件（大陸棚・バンク・湧昇流・潮境）
+  \item EEZの範囲と影響
+  \item 養殖が天然を逆転した年（2022）
+  \item 漁業生産量1位（中国）
+  \item ペルーの漁獲量とアンチョビ
+  \item IWCと日本の捕鯨
+  \item ワシントン条約の目的
+  \item 日本の漁業従事者の特徴（9割が個人経営）
+\end{itemize}
+\end{multicols}
+
+\begin{multicols}{2}
+\textbf{【鉱産資源】}
+\begin{itemize}[leftmargin=1em, label=\( \square \)]
+  \item 鉄鉱石生産1位（オーストラリア）
+  \item 銅生産1位（チリ），カッパーベルト
+  \item ボーキサイト生産1位（オーストラリア）
+  \item アルミ精錬1位（中国）と電力問題
+  \item コバルト産出1位（コンゴ民主共和国）
+  \item レアアース1位（中国）
+  \item リチウムトライアングル
+  \item レアメタル・レアアースの定義
+  \item 都市鉱山・e-wasteの概念
+  \item 資源ナショナリズム・資源メジャー
+\end{itemize}
+
+\columnbreak
+
+\textbf{【記述頻出テーマ】}
+\begin{itemize}[leftmargin=1em, label=\( \square \)]
+  \item EEZが日本漁業に与えた影響
+  \item 林業の先進国・途上国差の理由
+  \item ボーキサイト産地≠アルミ精錬国の理由
+  \item 中国が鉄鉱石輸入大国の理由
+  \item 養殖業が急増した理由（需要増・乱獲・EEZ）
+  \item 資源偏在と国際関係への影響
+\end{itemize}
+\end{multicols}
+\end{tcolorbox}
+
+\vspace{4mm}
+
+\begin{center}
+\begin{tcolorbox}[
+  enhanced,
+  colback=maingreen!10,
+  colframe=maingreen,
+  width=0.9\textwidth,
+  arc=5mm,
+]
+\begin{center}
+{\large\sffamily\bfseries\color{maingreen}Good Luck on Your Exam! 試験頑張ってください！}\\[2pt]
+{\small 林業・水産業・鉱産資源の統計グラフは「なぜその国が1位か」を地理的条件と結びつけて理解しよう}
+\end{center}
+\end{tcolorbox}
+\end{center}
+
+\end{document}
