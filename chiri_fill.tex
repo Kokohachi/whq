@@ -1,0 +1,239 @@
+%============================================================
+% chiri_fill.tex  (main2.tex風デザイン + 穴埋め切替)
+% 目的：claude_chiri.tex の内容を変えずに、main2.tex同様の
+%       \answertrue/\answerfalse 切替で穴埋めプリント化する
+% コンパイル例：
+%   platex chiri_fill.tex
+%   dvipdfmx chiri_fill.dvi
+%============================================================
+\documentclass[10pt,a4paper,dvipdfmx]{jsarticle}
+
+\usepackage[utf8]{inputenc}
+\usepackage[top=15mm, bottom=15mm, left=15mm, right=15mm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{calc}
+\usepackage{ulem}
+\usepackage{tcolorbox}
+\usepackage{pgffor}
+\usepackage{otf}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{colortbl}
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usetikzlibrary{patterns,arrows.meta,shapes.geometric}
+
+\tcbuselibrary{skins,breakable}
+\pgfplotsset{compat=1.18}
+
+% ==============================================
+% ★ 穴埋めモードの切り替え設定 ★
+% 解答プリント（赤字）にする場合は \answertrue
+% 生徒用プリント（空欄）にする場合は \answerfalse
+\newif\ifanswer
+\answertrue % ←ここを変更
+% ==============================================
+
+\newcounter{blanknum}
+
+% 穴埋め用マクロ（番号＋下線で文字幅維持）
+\newcommand{\aw}[1]{%
+  \stepcounter{blanknum}%
+  % 番号を左にはみ出させつつ、そのぶんだけ左余白を確保
+  \ifnum\value{blanknum}<10
+    \hspace{1.2em}%
+  \else
+    \ifnum\value{blanknum}<100
+      \hspace{1.6em}%
+    \else
+      \hspace{1.9em}%
+    \fi
+  \fi
+  \llap{\textsubscript{\scriptsize（\theblanknum）}}%
+  \ifanswer
+    \uline{\textcolor{red}{\textbf{\Large{#1}}}}%
+  \else
+    \uline{\textcolor{white}{\textbf{\Large{#1}}}}%
+  \fi
+}
+
+%================================
+% 色（claude_chiri.texの定義を維持）
+%================================
+\definecolor{mainblue}{RGB}{30,90,160}
+\definecolor{maingreen}{RGB}{20,120,60}
+\definecolor{mainorange}{RGB}{200,80,20}
+\definecolor{mainred}{RGB}{180,30,30}
+\definecolor{lightyellow}{RGB}{255,252,220}
+\definecolor{lightblue}{RGB}{220,235,255}
+\definecolor{lightgreen}{RGB}{220,250,230}
+\definecolor{lightred}{RGB}{255,225,225}
+\definecolor{lightgray}{RGB}{245,245,245}
+\definecolor{darkgray}{RGB}{80,80,80}
+\definecolor{tabhead}{RGB}{50,100,170}
+
+%================================
+% tcolorbox（claude_chiri.texの意匠を維持）
+%================================
+\tcbset{
+  sectionbox/.style={
+    enhanced, breakable,
+    colback=lightblue, colframe=mainblue,
+    fonttitle=\bfseries,
+    title style={fill=mainblue},
+    coltitle=white,
+    top=2mm, bottom=2mm, left=3mm, right=3mm,
+  },
+  pointbox/.style={
+    enhanced, breakable,
+    colback=lightyellow, colframe=mainorange,
+    fonttitle=\bfseries,
+    title style={fill=mainorange},
+    coltitle=white,
+    top=2mm, bottom=2mm, left=3mm, right=3mm,
+  },
+  testbox/.style={
+    enhanced, breakable,
+    colback=lightgreen, colframe=maingreen,
+    fonttitle=\bfseries,
+    title style={fill=maingreen},
+    coltitle=white,
+    top=2mm, bottom=2mm, left=3mm, right=3mm,
+  },
+  warnbox/.style={
+    enhanced, breakable,
+    colback=lightred, colframe=mainred,
+    fonttitle=\bfseries,
+    title style={fill=mainred},
+    coltitle=white,
+    top=2mm, bottom=2mm, left=3mm, right=3mm,
+  },
+  notebox/.style={
+    enhanced, breakable,
+    colback=lightgray, colframe=darkgray,
+    fonttitle=\bfseries,
+    title style={fill=darkgray},
+    coltitle=white,
+    top=2mm, bottom=2mm, left=3mm, right=3mm,
+  },
+}
+
+%================================
+% 見出し（main2風：jsarticle+titlesec）
+%================================
+\titleformat{\section}[hang]
+  {\Large\bfseries}{\colorbox{darkgray}{\color{white}\thesection}}{1em}{\uline}
+\titleformat{\subsection}[hang]
+  {\large\bfseries}{\colorbox{gray!30}{\thesubsection}}{1em}{}
+\titleformat{\subsubsection}[hang]
+  {\normalsize\bfseries}{}{0em}{■ }
+
+%================================
+% ヘッダー・フッター（main2風）
+%================================
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\textbf{地理 中間試験対策まとめ}}
+\fancyhead[R]{\textbf{林業・水産業・鉱産資源}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+%================================
+% 便利コマンド（内容は変えず、\key/\imp を穴埋め化）
+%================================
+\newcommand{\rank}[1]{\textcircled{\scriptsize #1}}
+\newcommand{\ans}[1]{\underline{\hspace{#1}}}
+
+% 方針：\key と \imp の両方を穴埋めにする（本文は変更しない）
+\newcommand{\key}[1]{\aw{#1}}
+\newcommand{\imp}[1]{\aw{#1}}
+
+%================================
+% 表スタイル（claude_chiri.tex互換）
+%================================
+\newcolumntype{C}[1]{>{\centering\arraybackslash}p{#1}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash}p{#1}}
+
+\begin{document}
+
+%============================================================
+% タイトル（内容維持、見た目をmain2寄せ）
+%============================================================
+\begin{center}
+  {\Huge \textbf{地理 中間試験対策まとめプリント}}\\[0.5em]
+  {\Large 林業・水産業・鉱産資源・資源エネルギー}\\[0.3em]
+  {\small 〔範囲〕グラフ読解 / 共通テスト過去問類題 / 自由記述対策 / 統計判定ポイント}
+\end{center}
+\vspace{1em}
+
+%============================================================
+% ここから本文：claude_chiri.tex をそのまま貼り付け（内容不変）
+% ※ このコミットでは冒頭のみを移植しています。
+%    続きも全て移す場合は、claude_chiri.tex の本文全体を
+%    \section{林業} 以降〜\end{document}直前まで貼り付けてください。
+%============================================================
+
+%%============================================================
+\section{林業}
+%%============================================================
+
+\subsection{基礎知識：用語整理}
+
+\begin{tcolorbox}[sectionbox, title={■ 林業の基本用語}]
+\begin{description}[leftmargin=2.5cm, style=nextline, labelsep=4mm]
+  \item[\key{林業}] 豊かな森林資源を活用し，木製品の原材料（用材），燃料（薪炭材），
+    きのこ・天然ゴム・樹皮など非木材林産物を生産する産業。
+  \item[\key{用材}] 家具・建築材料になる丸太，製材品，合板，パルプ等。
+    産業用丸太 ≈ 約20億m³/年（2022）。
+  \item[\key{薪炭材}] 薪や炭などの燃料用丸太。約20億m³/年（2022）。
+    \imp{発展途上国}で全木材生産の6割以上を占める。
+  \item[\key{丸太}（用材広義）] 産業用丸太（用材）＋薪炭材を合わせた概念。
+  \item[\key{合板}] 薄くスライスした木の単板を何層も積層・重ね合わせたもの。
+    加工しやすく強度・断熱性・吸音性に優れる。型枠にも利用。
+  \item[\key{パルプ}] 木材チップを薬品で溶かした繊維分。紙の原料。草・わら・さとうきびからも製造可。
+  \item[\key{チーク材}] 熱帯の常緑広葉樹。高級家具・内装用。東南アジア産。
+  \item[\key{ラワン材}] 熱帯産の柔らかい広葉樹。合板に加工，コンクリート型枠に使用。
+  \item[\key{人工林}] 経済発展で天然林が伐採・需要増→人工林が増加。日本国土の約4割。
+  \item[\key{退耕還林}] 中国の政策：農地を森林に戻す政策。\key{生態移民}と連動。
+  \item[\key{生物多様性}] 森林は陸域生物種の約8割が生息。保全が重要課題。
+\end{description}
+\end{tcolorbox}
+
+\vspace{2mm}
+
+\subsection{世界の森林分布と樹種}
+
+\begin{tcolorbox}[pointbox, title={■ 主要な森林タイプと分布}]
+\begin{tabular}{L{3cm}L{4.5cm}L{5cm}}
+\toprule
+\rowcolor{mainorange!20}
+\textbf{森林タイプ} & \textbf{主な分布地域} & \textbf{特徴・用途} \\
+\midrule
+\key{熱帯雨林}（常緑広葉樹） & アマゾン，コンゴ盆地，東南アジア & チーク・ラワン；二酸化炭素吸収量大 \\
+\addlinespace
+\key{タイガ}（亜寒帯針葉樹林） & カナダ，ロシア，北欧 & 建築材・パルプ原料；針葉樹林 \\
+\addlinespace
+\key{温帯林}（温帯広葉樹・混交林） & 西・中央ヨーロッパ，日本，中国東部 & 広葉樹・針葉樹が混在 \\
+\addlinespace
+\key{硬葉樹林}（地中海性） & 地中海沿岸，カリフォルニア & コルク樫など；乾燥耐性 \\
+\bottomrule
+\end{tabular}
+
+\medskip
+\begin{itemize}[leftmargin=1em]
+  \item 世界の森林面積は\imp{40億ha}超（陸地面積の約3割）。9割以上が天然林。
+  \item 亜寒帯林（タイガ）は建築資材・パルプの原料として重要。
+  \item 熱帯雨林の伐採→農地転用→\imp{二酸化炭素吸収量の減少}→地球温暖化の要因。
+\end{itemize}
+\end{tcolorbox}
+
+\end{document}
